@@ -1,7 +1,742 @@
 <!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com 
+		https://github.com/SheetJS/js-xlsx
+		https://stuk.github.io/jszip/
+		https://oss.sheetjs.com/js-xlsx/
+		https://www.pagecloud.com/blog/how-to-add-custom-fonts-to-any-website
+-->
 <html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<title>V-Mast Doc Fix</title>
+<style>
+
+	@font-face {
+		font-family: "SUNBF77_702_EN";
+		src: url("fonts/SUNBF77_702_EN.woff") format('woff');
+	}
+
+	:root {
+		--sun-font: 'SUNBF77_702_EN';
+	}
+	
+	html { height:100%; }
+		
+	body {
+		height: 100%;
+		width = 600px;
+		line-height: normal;
+		
+	}
+	#title {
+		font-size: 20px;
+		text-align: center;
+		font-weight: bold;
+	}
+	
+	#title label {
+		font-size:12px;
+	}
+	
+	footer {
+		color: lightgray;
+	}
+
+	div.filetable {
+		width: 100%
+	}	
+	
+	#output {
+		font-family: var(--sun-font); 
+		font-size: 20px;
+		height: 55%;
+		overflow-y: scroll;
+		scroll-behavior: smooth; 
+		border-width: 1px;
+		padding: 1px;
+		border-style: inset;
+		border-color: lightblue;
+	}
+	
+	#splitlabel {
+		font-size: 10px;
+		font-weight: bold;
+	}
+	#lblclear {
+		font-size: 12px;
+		font-weight: bold;
+	}
+	
+	table.xreftable {
+		 border-width: 1px;
+		 border-spacing: 0;
+		 border-style: outset;
+		 border-color: black;
+		 border-collapse: separate; 
+		 background-color: white; 
+		 font-size: 14px;
+		 table-layout: fixed;
+		 margin-bottom: 5px;
+		 width: 100%; 
+		 empty-cells: show;
+
+	}
+	.xreftable tr {
+		vertical-align: middle;
+		padding-top: 5px;
+	}
+
+	.xreftable td, .xreftable th {
+		border-width: 1px;
+		padding: 1px;
+		border-style: inset;
+		border-color: lightblue;
+		font-size: 14px;
+		word-wrap: break-word;
+		min-width: 25px;
+	}
+
+	.xreftable td.nameCol, .xreftable th.nameCol {
+		 word-wrap: break-word;
+		 width: 100px;
+	}
+	
+	.xreftable td.synCol, .xreftable th.synCol {
+		line-height: 15px;
+		width: 120px;
+	}
+	.xreftable td.xrefCol, .xreftable th.xrefCol {
+		/*vertical-align: top;*/
+		line-height: 15px;
+	}
+
+	.xreftable td.fonticon {
+		font-size: 32px;
+		font-family: var(--sun-font); 
+		vertical-align: middle;
+		color: blue;
+		width: 45px;
+		height: 100%;
+	}
+	.xreftable th.fonticon {
+		text-align: center;
+		color: blue;
+		width: 45px;
+	}
+	
+	.xreftable td.unicol {
+		text-align: center;
+		font-size: 14px;
+		font-family: var(--sun-font); 
+		color: blue;
+		width: 60px;
+	}
+	.xreftable th.unicol {
+		text-align: center;
+		color: blue;
+		width: 60px;
+	}
+
+		
+
+		 /*Table Even Rows Styles*/
+	 .xreftable tbody, .xreftable tr:nth-child(even){
+		 background-color: #efefef;
+	 }
+
+		 /*Table ODD Rows Styles*/
+	 .xreftable tbody, .xreftable tr:nth-child(odd){
+		 background-color: #dfdfdf;
+	 }
+
+		 /*Table Row HOver Style*/
+	 .xreftable table, .xreftable tbody, .xreftable tr:hover{
+		 background-color: #ffffd8;
+	 }
+
+
+	.uerror {
+		  color: red;
+	 }
+	.nameerror {
+		  color: gray;
+	 }
+	
+	 
+
+	#drop {
+		border:2px dashed #bbb;
+		border-radius:5px;
+		padding:5px;
+		text-align:center;
+		font:20pt bold,"Vollkorn";color:#bbb
+		
+	}
+	
+
+	/* The Modal (background) */
+	.modal {
+	  display: none; /* Hidden by default */
+	  position: fixed; /* Stay in place */
+	  z-index: 1; /* Sit on top */
+	  padding-top: 100px; /* Location of the box */
+	  left: 0;
+	  top: 0;
+	  width: 100%; /* Full width */
+	  height: 100%; /* Full height */
+	  overflow: auto; /* Enable scroll if needed */
+	  background-color: rgb(0,0,0); /* Fallback color */
+	  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	}
+
+	/* Modal Content */
+	.modal-content {
+	  position: relative;
+	  background-color: #eeeeee;
+	  margin: auto;
+	  padding: 0;
+	  border: 1px solid #888;
+	  border-radius:5px;
+	  width: 300px;;
+	  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	  -webkit-animation-name: animatetop;
+	  -webkit-animation-duration: 0.4s;
+	  animation-name: animatetop;
+	  animation-duration: 0.4s
+	}
+
+	/* Add Animation */
+	@-webkit-keyframes animatetop {
+	  from {top:-300px; opacity:0} 
+	  to {top:0; opacity:1}
+	}
+
+	@keyframes animatetop {
+	  from {top:-300px; opacity:0}
+	  to {top:0; opacity:1}
+	}
+
+	/* The Close Button */
+	.close {
+	  color: white;
+	  float: right;
+	  font-size: 28px;
+	  font-weight: bold;
+	}
+
+	.close:hover,
+	.close:focus {
+	  color: #000;
+	  text-decoration: none;
+	  cursor: pointer;
+	}
+
+	.modal-header {
+	  padding: 1px 5px;
+	  background-color: red;
+	  color: white;
+	  font-size: 28px;
+	  font-weight: bold;
+	}
+
+	.modal-body {padding: 2px 16px;}
+
+</style>
+
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+
+	<form >
+		<div id="title">V-Mast Doc Fix
+		<label style="float:right;">10.5</label>
+		</div>
+		<fieldset id="fdrop">
+			<div style="padding-bottom:5px;">
+				<label for="xlf" style="float:left;"> <strong>Select ODS, XLSX or CSV File:</strong></label>
+				<input id="xlf"  type="file" name="xlfile" >
+				<br>
+				<label for="txlf" style="float:left;"> <strong>Select document as txt File:</strong></label>
+				<input id="txlf"  type="file" name="txlfile" >
+				<div id="drop">Or drop Dictionary and Text file here</div>
+			</div>
+
+			<div class="filetable" style="padding-bottom:5px;">
+				<div class="filetable" style="padding-bottom:5px;">
+					<div style="padding-bottom:5px;">
+						<!--<label for="sfont" style="float:left;"> <strong>Sun font&nbsp</strong></label>
+						<input id='sfont' type='text' size="10">
+						-->
+	
+						<label for="csfont" style="float:left;"> <strong>Sun font&nbsp</strong></label>
+						<input id="fileInput" type="file" accept=".ttf, .woff"  style="display:none;" onchange="fileSelected(this)" />
+						<input id="csfont" type="text" value="Choose Files!" onclick="document.getElementById('fileInput').click(); " >
+						Note: Font file must be in current directory
+						<br>
+				<!--		<label for="sxlf" style="float:left;"> <strong>Save</strong></label> 
+						<input id="sxlf"  type="file" name="txlfile" >						
+						
+						<button id="download"onClick="download()">Download</button>
+						<button type="button" onclick="saveDynamicDataToFile();">Click to Save</button>
+						-->
+					</div>
+				</div>
+
+			</div>
+		</fieldset>
+	</form>
+	
+
+
+<div id="output">
+&#174; &#xe000;
+John 3:16
+
+ 16  Aaron Ziphron   Aaron	 
+
+</div>
+<div id="control">
+		<button id="download"onClick="download()">Download</button>
+						
+</div>
+<footer>
+    <center>
+		<!--<font face="SUN7.24"> -->
+      <p id="copyright">&copy; Wilbur Zirk 2020 &#xe000;
+	  </p>
+	 <!-- </font> -->
+    </center>
+  </footer>
+  
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <p>Error</p>
+    </div>
+    <div class="modal-body">
+      <p id="mdisp" >Error on row</p>
+	</div>
+  </div>
+
+</div>
+
+<script src="js/jszip.js"></script>
+<script src="js/xlsx.js"></script>
+<!-- <script src="js/cookie.js"></script> -->
+<script src="js/table.js" id="tbl"></script>
+<script src="js/modal.js"></script>
+<script src="js/convertuni.js"></script>
+<!--<script src="js/utf8js.js" > </script>-->
+<script src="js/readdoc.js" > </script>
+<!--<script src="js/FileSaver.js"></script> -->
+<!--<script src="sun.js" > </script>-->
+<!-- https://stackoverflow.com/questions/1017424/pass-vars-to-javascript-via-the-src-attribute  -->
+<!-- <script type="text/javascript" data-parameter_1="value_1" ... src="sun.js"></script>
+-->
+
+<script>
+var debug = false;
+var X = XLSX;
+var CSV = false;
+var TXT = false;
+var global_wb;
+//var srchType = document.querySelector('input[name = wsrch]:checked').value
+var colValues =[];
+
+var csvArray = [];
+var SUNbuffer = "";
+
+
+window.addEventListener('DOMContentLoaded', (event) => {
+	console.log('DOM fully loaded')
+	inner = document.getElementById("output").innerHTML;	
+
+	b = ["ee","ac","8d"]
+	uni = convertUTF82CP(b).toLowerCase();
+	var char = unescape('%u' + uni);
+	console.log( b, uni, char, typeof b, typeof uni, typeof char)
+	inner = inner+"<br> uni "+char
+	d = 'efbbbf4a6f686e20333a31360d0a0d0aee8dbe20313620ee80b6ee809a20ee84a92020ee8dbe09686920746865726520ee80b620ee828320ee88a320'
+	//inner = inner+"<br> hexstr "+hex2char(d)
+	u =  String.fromCharCode.apply(null, new Int16Array(d));
+	inner = inner+"<br> hexstr "+u
+	e = 'John 3:16  16  Aaron Ziphron   Aaron	 '
+	inner = inner+"<br> gdoc  "+e
+	//inner = inner+"<br> gdoc mixed "+mixedUnicodeAscii2String(e)
+
+	
+	document.getElementById("output").innerHTML = inner
+
+});
+
+/*
+var csvData = 'Test Data\n'
++ '"","questioned","e061","mouth,said,speak: ?","ask"\n'
++ '"","ashamed","e05f","no,not: mouth: heart",\n'
++ '"","loaf","e05d","mouth,said,speak: grain,wheat","bread"\n'
++ '"","boy","e001","small,few: man",\n'
++ '"me poss","mine",,,"ours:my:our"\n'
++ '"","blaspheme","e05b","mouth,said,speak,confessiom: bad: no,not: good: king,crown,ruler,lord,master: man: love,compassion","insult:blasphemy"\n'
++ '"","Apelles","ebcd","man:split,divide,division,separate","looks_like"\n'
++ '"","Levi","eb1b","man: with: equal,same: people",\n'
++ '"","chariot","EC82","horse: chair,sit",\n'
++ '"","Cilicia","EB5B","hair: face: fabric,clothing: land,ground,earth",\n'
++ '"","Nahor","EC6E","man: air",\n';
+*/
+
+
+
+function fixUnicode(lines) {
+	console.log('fix');
+	var t0 = performance.now();
+
+	for (var i = 0; i < lines.length; i ++) {
+		rowx = lines[i]
+			j = 0
+			var uni = rowx[j];
+			if (uni.length === 3) {
+				var hArry = toHexArray(uni);
+				
+				uni = convertUTF82CP(hArry).toLowerCase();
+				var char = unescape('%u' + uni);
+				//console.log("%s %s %s",rowx[j][0], rowx[j][1],rowx[j][2])
+				//console.log(rowx[j], rowx[j].length,hArry, uni, char, typeof rowx[j], typeof uni, typeof char)
+				lines[i][j] = char;
+			}
+	}
+	console.log('csvfix',lines);
+	//document.getElementById("output").innerHTML=lines
+	var t1 = performance.now();
+	console.log("fixUnicode " + (t1 - t0) + " milliseconds.");
+	return lines;
+}
+
+function hex2Unicode(hexAry) {
+	console.log(hexAry, hexAry.length)
+
+}
+
+
+var process_wb = (function() {
+	//var OUT = document.getElementById('output');
+	var to_csv = function to_csv(workbook) {
+		var t0 = performance.now();
+		var result = [];
+		workbook.SheetNames.forEach(function(sheetName) {
+			var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+			//var csv = X.utils.sheet_to_json(workbook.Sheets[sheetName], {header:1, raw:true});
+			if(csv.length){
+				result.push("SHEET: " + sheetName);
+				result.push("");
+				result.push(csv);
+			}
+		});
+		var t1 = performance.now();
+		console.log("to_csv " + (t1 - t0) + " milliseconds.");
+		return result.join("\n");
+	};
+
+
+	return function process_wb(wb) {
+		var t0 = performance.now();
+		console.log('process_wb')
+		global_wb = wb;
+		//var output = "";
+        csv = to_csv(wb);
+		csvArray = csvToArray(csv);
+
+		if (CSV) csvArray = fixUnicode(csvArray);
+		
+		var t1 = performance.now();
+		console.log("process_wb "+ (t1 - t0) + " milliseconds.");
+	};
+
+})();
+/*
+function chunkit(str) {
+	var chunks = [];
+
+	for (var i = 0, charsLength = str.length; i < charsLength; i += 2) {
+		chunks.push(str.substring(i, i + 2));
+	}
+	return chunks
+}
+*/
+
+	function UTF8ToText(x){
+   	    var result = "";
+		console.log(x)
+   	    try {
+   	        //if(chkutf8){
+   	        //    x = x.toString();
+   	        //    for (var i = 0; (i < x.length && x.substr(i, 2) !== '00'); i += 2)
+   	        //        result += String.fromCharCode(parseInt(x.substr(i, 2), 16));
+   	        //} else {
+   	            x = x.replace(/\\x/gi,"");
+   	            x = x.toString();
+   	            for (var i = 0; (i < x.length && x.substr(i, 2) !== '00'); i += 2)
+   	                result += String.fromCharCode(parseInt(x.substr(i, 2), 16));
+   	       // }
+   	        result = decodeURIComponent(escape(result));
+   	    } catch(err) {
+   	        return err.message;
+   	    } finally {
+   	        return result;
+   	    }
+   	}
+/*   	
+const fromHexString = hexString =>
+  new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
+const toHexString = bytes =>
+  bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
+*/
+var do_file = (function() {
+	return function do_file(files) {
+		console.log('do_file');
+		var t0 = performance.now();
+		var rABS = false;
+		var f = files[0];
+		var fname = f["name"];
+		var ext = fname.slice((fname.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
+		console.log('extension',ext)
+		if (ext === 'txt') TXT = true;
+		else TXT = false;
+		
+		if (ext === 'csv') CSV = true;
+		else CSV = false;
+		
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			var data = e.target.result;
+			console.log(data);
+			if (TXT) {
+				console.log('file',data)
+				SUNbuffer = buf2hex(data)
+				
+				//gdocStr = String.fromCharCode.apply(null, new Uint8Array(data));
+				//document.getElementById("output").innerHTML = gdocStr;
+				
+				document.getElementById("output").innerHTML = UTF8ToText(SUNbuffer)
+				
+		
+
+			} else {
+				process_wb(X.read(data, {type:'array'}));
+			}
+			console.log('data processed')
+			processData()
+		};
+		
+		if(rABS) reader.readAsBinaryString(f);
+		else {
+			console.log('read as arraybuffer')
+			reader.readAsArrayBuffer(f);
+		}
+		
+		
+		var t1 = performance.now();
+		console.log("do_file " + (t1 - t0) + " milliseconds.");
+	};
+})();
+
+
+function processData() {
+	console.log('processData', SUNbuffer.length, csvArray.length)
+	if (SUNbuffer.length > 0 && csvArray.length > 0) {
+		console.log('both files loaded')
+		readDoc(document.getElementById("output").innerHTML, csvArray)
+	}
+}
+
+(function() {
+	var drop = document.getElementById('fdrop');
+	if(!drop.addEventListener) return;
+
+	function handleDrop(e) {
+		console.log('file dropped')
+		e.stopPropagation();
+		e.preventDefault();
+		do_file(e.dataTransfer.files);
+
+	}
+
+	function handleDragover(e) {
+		console.log('handeldragover')
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	}
+
+	drop.addEventListener('dragenter', handleDragover, false);
+	drop.addEventListener('dragover', handleDragover, false);
+	drop.addEventListener('drop', handleDrop, false);
+
+/*})();
+
+(function() { */
+	var xlf = document.getElementById('xlf');
+	if(!xlf.addEventListener) return;
+	var txlf = document.getElementById('txlf');
+	if(!txlf.addEventListener) return;
+	
+	function handleFile(e) { 
+		console.log('file chooser',e)
+		do_file(e.target.files);
+	}
+	xlf.addEventListener('change', handleFile, false);
+	txlf.addEventListener('change', handleFile, false);						
+ 
+	//var sfont = document.getElementById('sfont');
+	//if(!sfont.addEventListener) return;
+	
+	//function shandleFile(e) { 
+	//	getFont(); 
+	//}
+	//sfont.addEventListener('change', shandleFile, false);
+	
+	var csfont = document.getElementById('csfont');
+	if(!csfont.addEventListener) return;
+	
+	function cshandleFile(e) { 
+		//#e.target.files
+		fval = document.getElementById('fileInput')
+		getFont(fval);
+	}
+	csfont.addEventListener('click', cshandleFile, false);
+	fileInput.addEventListener('click', cshandleFile, false);
+	document.getElementById('fileInput')
+ 
+})();
+
+//document.getElementById('sfont').value = "";
+document.getElementById('xlf').value = ""; 
+
+var fval = "";
+//document.getElementById('sfont').value = fval;
+document.getElementById('csfont').value = fval;
+changeFont("SUNBF77_702_EN");
+
+
+function fileSelected(input){
+
+	
+	filename = input.files[0].name;
+	  
+	console.log(input.files)
+	console.log('filename',filename)
+	filename = filename.substring(0, filename.lastIndexOf('.')) || filename
+	document.getElementById('csfont').value = filename
+	console.log('fnt',filename)
+	getFont(filename)
+}
+
+
+function getFont(fval) {
+	//fval = document.getElementById('sfont').value;
+	console.log('getFont',fval)
+	//document.documentElement.style.setProperty('--sun-font', fval);
+	changeFont(fval)
+}
+
+
+//https://stackoverflow.com/questions/11355147/font-face-changing-via-javascript
+function fface(f) {
+	ff = "@font-face { font-family: '" + f + "';\
+		src: url('" + f + ".woff') format('woff'),\
+		     url('" + f + ".ttf') format('truetype');\
+	}"
+
+	console.log(ff)
+	return ff;
+}
+
+function changeFont(f) {
+	console.log(f)
+	ff = fface(f)
+	var fStyle = document.getElementById("fontStyle")
+	if (!fStyle) {
+		fStyle = document.createElement('style');
+		fStyle.id = "fontStyle"
+		fStyle.appendChild(document.createTextNode(ff)
+		);
+			
+		document.head.appendChild(fStyle);
+	} else {
+		fStyle.innerHTML = ff;
+	}
+
+	console.log(fStyle.innerHTML)
+	document.documentElement.style.setProperty('--sun-font', f);
+	//document.getElementById('sfont').value = f;
+	document.getElementById('csfont').value = f;
+}
+/*
+function setSrch(e) {
+	srchType = document.querySelector('input[name = wsrch]:checked').value
+	search_Table()
+}
+
+function showDebug() {
+	e =document.getElementById('showdebug').checked;
+	if (e) {
+		generateTable(jscsvToArray(csvData));
+		//table_mismatch();
+	} else {
+		document.getElementById("output").innerHTML = ""
+	}
+}
+*/
+//generateTable(jscsvToArray(csvData));
+
+/*
+if (debug) {
+	console.log(csvData)
+	generateTable(csvToArray(csvData));
+	table_mismatch();
+	//sortTable();
+}
+*/
+
+
+function download(){
+    var a = document.body.appendChild(
+        document.createElement("a")
+    );
+    a.download = "export.html";
+    a.href = "data:text/html," + document.getElementById("output").innerHTML;
+    a.click();
+}
+/*
+function saveDynamicDataToFile() {
+
+	var userInput = document.getElementById("output").innerHTML
+	
+	var blob = new Blob([userInput], { type: "text/plain;charset=utf-8" });
+	saveAs(blob, "dynamic.txt");
+}
+*/
+function readFile(input) {
+  let file = input.files[0];
+	console.log(file.name)
+  let reader = new FileReader();
+
+  reader.readAsText(file);
+
+  reader.onload = function() {
+    //console.log(reader.result);
+  };
+
+  reader.onerror = function() {
+    console.log(reader.error);
+  };
+
+}
+
+</script>
 </body>
 </html>
