@@ -9,7 +9,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-<title>V-Mast Doc Fix</title>
+<title>V-Mast Doc update</title>
 <style>
 
 	@font-face {
@@ -29,6 +29,7 @@
 		line-height: normal;
 		
 	}
+	
 	#title {
 		font-size: 20px;
 		text-align: center;
@@ -41,6 +42,12 @@
 	
 	footer {
 		color: lightgray;
+		font-family: var(--sun-font); 
+	}
+
+	span.btm {
+		vertical-align:sub;
+		font-size: 36px;
 	}
 
 	div.filetable {
@@ -49,7 +56,7 @@
 	
 	#output {
 		font-family: var(--sun-font); 
-		font-size: 20px;
+		font-size: 26px;
 		height: 55%;
 		overflow-y: scroll;
 		scroll-behavior: smooth; 
@@ -248,7 +255,7 @@
 <body>
 
 	<form >
-		<div id="title">V-Mast Doc Fix
+		<div id="title">V-Mast Doc Update
 		<label style="float:right;">10.5</label>
 		</div>
 		<fieldset id="fdrop">
@@ -258,27 +265,21 @@
 				<br>
 				<label for="txlf" style="float:left;"> <strong>Select document as txt File:</strong></label>
 				<input id="txlf"  type="file" name="txlfile" >
-				<div id="drop">Or drop Dictionary and Text file here</div>
+				<div id="drop">Or drop Dictionary and VMast Text file here</div>
 			</div>
 
 			<div class="filetable" style="padding-bottom:5px;">
 				<div class="filetable" style="padding-bottom:5px;">
 					<div style="padding-bottom:5px;">
-						<!--<label for="sfont" style="float:left;"> <strong>Sun font&nbsp</strong></label>
-						<input id='sfont' type='text' size="10">
-						-->
 	
 						<label for="csfont" style="float:left;"> <strong>Sun font&nbsp</strong></label>
 						<input id="fileInput" type="file" accept=".ttf, .woff"  style="display:none;" onchange="fileSelected(this)" />
 						<input id="csfont" type="text" value="Choose Files!" onclick="document.getElementById('fileInput').click(); " >
-						Note: Font file must be in current directory
-						<br>
-				<!--		<label for="sxlf" style="float:left;"> <strong>Save</strong></label> 
-						<input id="sxlf"  type="file" name="txlfile" >						
-						
-						<button id="download"onClick="download()">Download</button>
-						<button type="button" onclick="saveDynamicDataToFile();">Click to Save</button>
-						-->
+						<hr>
+						<div> <b>Note:</b> The <b>VMast document</b> must be saved as a<b>".txt"</b> file.
+							Drag or Load both the VMAst document file and the Dictionary spreadsheet
+							into the box above.
+						</div>
 					</div>
 				</div>
 
@@ -289,22 +290,17 @@
 
 
 <div id="output">
-&#174; &#xe000;
-John 3:16
-
- 16  Aaron Ziphron   Aaron	 
+<!--&#174; &#xe000;-->
 
 </div>
 <div id="control">
-		<button id="download"onClick="download()">Download</button>
+		<button id="download"onClick="download()">Save</button>
 						
 </div>
 <footer>
     <center>
-		<!--<font face="SUN7.24"> -->
-      <p id="copyright">&copy; Wilbur Zirk 2020 &#xe000;
+      <p id="copyright">&copy; Wilbur Zirk 2020 <span class="btm">&#xe000;</span>
 	  </p>
-	 <!-- </font> -->
     </center>
   </footer>
   
@@ -353,6 +349,7 @@ var SUNbuffer = "";
 
 window.addEventListener('DOMContentLoaded', (event) => {
 	console.log('DOM fully loaded')
+	/*
 	inner = document.getElementById("output").innerHTML;	
 
 	b = ["ee","ac","8d"]
@@ -361,16 +358,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	console.log( b, uni, char, typeof b, typeof uni, typeof char)
 	inner = inner+"<br> uni "+char
 	d = 'efbbbf4a6f686e20333a31360d0a0d0aee8dbe20313620ee80b6ee809a20ee84a92020ee8dbe09686920746865726520ee80b620ee828320ee88a320'
-	//inner = inner+"<br> hexstr "+hex2char(d)
 	u =  String.fromCharCode.apply(null, new Int16Array(d));
 	inner = inner+"<br> hexstr "+u
 	e = 'John 3:16  16  Aaron Ziphron   Aaron	 '
 	inner = inner+"<br> gdoc  "+e
-	//inner = inner+"<br> gdoc mixed "+mixedUnicodeAscii2String(e)
 
-	
 	document.getElementById("output").innerHTML = inner
-
+	*/
 });
 
 /*
