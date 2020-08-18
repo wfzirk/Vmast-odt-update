@@ -13,28 +13,13 @@
 <style>
 	@font-face {
 		font-family: "SUNBF77_810_EN";
-		src: url("SUNBF77_810_EN.woff") format('woff'),
-			 url("SUNBF77_810_EN.ttf") format(truetype);
+		src: url("https://wfzirk.github.io/Vmast-odt-update/fonts/SUNBF77_810_EN.woff") format('woff');
 	}
 	@font-face {
 		font-family: "SUN7_7_810";
-		src: url("SUN7_7_810.woff") format('woff'),
-			 url("SUN7_7_810.woff") format('woff');
+		src: url("https://wfzirk.github.io/Vmast-odt-update/fonts/SUN7_7_810.woff") format('woff');
 	}
-	/*
-	@font-face {
-		font-family: "BACKSUN";
-		src: url("fonts/SUNBF77_810_EN.woff") format('woff'),
-			 url("fonts/SUNBF77_810_EN.ttf") format(truetype);
-	}	
-	@font-face {
-		font-family: "SUN";
-		src: url("fonts/SUN7_7_810.woff") format('woff'),
-			 url("fonts/SUN7_7_810.woff") format('woff');
-	}
-	*/
-	
-	/*
+
 	@font-face {
 		font-family: "SUNBF77_702_EN";
 		src: url("https://wfzirk.github.io/Vmast-odt-update/fonts/SUNBF77_702_EN.woff") format('woff');
@@ -43,10 +28,10 @@
 		font-family: "SUN7_7_702_EN";
 		src: url("https://wfzirk.github.io/Vmast-odt-update/fonts/SUN7_7_702_EN.woff") format('woff');
 	}
-	*/
+
 
 	:root {
-		--sun-font: 'BACKSUN';
+		--sun-font: 'SUNBF77_810_EN';
 	}
 	
 	html { height:100%; }
@@ -76,7 +61,6 @@
 	span.btm {
 		vertical-align:sub;
 		font-size: 36px;
-		float: right;
 	}
 
 	div.filetable {
@@ -302,8 +286,8 @@
 					<div style="padding-bottom:5px;">
 	
 						<label for="csfont" style="float:left;"> <strong>Sun font&nbsp</strong></label>
-						<input id="fileInput" type="file" accept=".woff"  style="display:none;" onchange="fileSelected(this)" />
-						<input id="csfont" type="text" value="Choose Font!" onclick="document.getElementById('fileInput').click(); " >
+						<input id="fileInput" type="file" accept=".ttf, .woff"  style="display:none;" onchange="fileSelected(this)" />
+						<input id="csfont" type="text" value="Choose Files!" onclick="document.getElementById('fileInput').click(); " >
 						<hr>
 						<div> <b>Note:</b> The <b>VMast document</b> must be saved as a<b>".txt"</b> file.
 							Drag or Load both the VMast document file and the Dictionary spreadsheet
@@ -328,7 +312,7 @@
 </div>
 <footer>
     <center>
-      <p id="copyright">&copy; Wilbur Zirk 2020 <span class="btm">&#xe037; &#xe01a; &#xe127;</span>
+      <p id="copyright">&copy; Wilbur Zirk 2020 <span class="btm">&#xe000;</span>
 	  </p>
     </center>
   </footer>
@@ -378,9 +362,7 @@ var SUNbuffer = "";
 var fval = "SUNBF77_810_EN"
 window.addEventListener('DOMContentLoaded', (event) => {
 	console.log('DOM fully loaded')
-	console.log(window.location.pathname)
-	console.log(document.location.pathname)
-	//fval = "SUNBF77_810_EN"
+	fval = "SUNBF77_810_EN"
 //document.getElementById('sfont').value = fval;
 	document.getElementById('csfont').value = fval;
 	changeFont(fval);
@@ -645,15 +627,15 @@ function processData() {
 //document.getElementById('sfont').value = "";
 document.getElementById('xlf').value = ""; 
 
-//var fval = "SUNBF77_810_EN"
-//var fval = "BACKSUN"
+var fval = "SUNBF77_810_EN"
 //document.getElementById('sfont').value = fval;
-//document.getElementById('csfont').value = fval;
-//changeFont(fval);
+document.getElementById('csfont').value = fval;
+changeFont(fval);
 
 
 function fileSelected(input){
 
+	
 	filename = input.files[0].name;
 	  
 	console.log(input.files)
