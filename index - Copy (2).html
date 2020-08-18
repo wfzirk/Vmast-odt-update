@@ -382,15 +382,14 @@ var colValues =[];
 var csvArray = [];
 var SUNbuffer = "";
 
-//var fval = "SUNBF77_810_EN"
+var fval = "SUNBF77_810_EN"
 window.addEventListener('DOMContentLoaded', (event) => {
 	console.log('DOM fully loaded')
 	console.log(window.location.pathname)
 	console.log(document.location.pathname)
 	//fval = "SUNBF77_810_EN"
 //document.getElementById('sfont').value = fval;
-	//document.getElementById('csfont').value = fval;
-	fval = document.getElementById('selFont').value;
+	document.getElementById('csfont').value = fval;
 	changeFont(fval);
 	/*
 	inner = document.getElementById("output").innerHTML;	
@@ -709,7 +708,7 @@ function changeFont(f) {
 	console.log(fStyle.innerHTML)
 	document.documentElement.style.setProperty('--sun-font', f);
 	//document.getElementById('sfont').value = f;
-//document.getElementById('csfont').value = f;
+	document.getElementById('csfont').value = f;
 }
 
 
