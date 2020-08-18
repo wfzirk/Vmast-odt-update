@@ -359,9 +359,13 @@ var colValues =[];
 var csvArray = [];
 var SUNbuffer = "";
 
-
+var fval = "SUNBF77_810_EN"
 window.addEventListener('DOMContentLoaded', (event) => {
 	console.log('DOM fully loaded')
+	fval = "SUNBF77_810_EN"
+//document.getElementById('sfont').value = fval;
+	document.getElementById('csfont').value = fval;
+	changeFont(fval);
 	/*
 	inner = document.getElementById("output").innerHTML;	
 
@@ -623,10 +627,10 @@ function processData() {
 //document.getElementById('sfont').value = "";
 document.getElementById('xlf').value = ""; 
 
-var fval = "";
+var fval = "SUNBF77_810_EN"
 //document.getElementById('sfont').value = fval;
 document.getElementById('csfont').value = fval;
-changeFont("SUNBF77_810_EN");
+changeFont(fval);
 
 
 function fileSelected(input){
