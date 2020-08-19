@@ -1,27 +1,5 @@
 
-// uint array to string
-
-
-// read amd detect unicode fileCreatedDate
-// https://stackoverflow.com/questions/1410334/filesystemobject-reading-unicode-files
 /*
-'Detect Unicode Files
-Set Stream = FSO.OpenTextFile(ScriptFolderObject.Path & "\" & FileName, 1, False)
-intAsc1Chr = Asc(Stream.Read(1))
-intAsc2Chr = Asc(Stream.Read(1))
-Stream.Close
-If intAsc1Chr = 255 And intAsc2Chr = 254 Then 
-    OpenAsUnicode = True
-Else
-    OpenAsUnicode = False
-End If
-
-'Get script content
-Set Stream = FSO.OpenTextFile(ScriptFolderObject.Path & "\" & FileName, 1, 0, OpenAsUnicode)
-TextContent = Stream.ReadAll()
-Stream.Close
-*/
-
 (function(window){
 		// https://ourcodeworld.com/articles/read/188/encode-and-decode-html-entities-using-pure-javascript
 	window.htmlentities = {
@@ -30,6 +8,7 @@ Stream.Close
 		 *
 		 * @param {String} str String with unescaped HTML characters
 		 **/
+		 /*
 		encode : function(str) {
 			var buf = [];
 			
@@ -44,6 +23,7 @@ Stream.Close
 		 *
 		 * @param {String} str htmlSet entities
 		 **/
+		 /*
 		decode : function(str) {
 			return str.replace(/&#(\d+);/g, function(match, dec) {
 				return String.fromCharCode(dec);
@@ -67,7 +47,8 @@ function typedArrayToUnicodeString(ua) {
     return decodeURIComponent(escstr);
 }
 
-
+*/
+/*
   function Uint8Array2Hex(str) {
     var result = '';
     for (var i=0; i<str.length; i++) {
@@ -129,10 +110,10 @@ function typedArrayToUnicodeString(ua) {
 
     return out;
 }
+*/  
   
   
-  
-  
+/*  
    function xxxxxxtoHexArray(str) {
     var result = [];
     for (var i=0; i<str.length; i++) {
@@ -141,7 +122,7 @@ function typedArrayToUnicodeString(ua) {
 	//console.log('toHexArr', str, result);
 	 return result;
   }
-  
+*/  
 
 function buf2hex(buffer) { // buffer is an ArrayBuffer
   return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');

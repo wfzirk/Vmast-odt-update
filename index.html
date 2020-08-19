@@ -322,16 +322,20 @@
 			</div>
 		</fieldset>
 	</form>
-	
-
-
+<!--	
+<textarea id="xoutput" rows="8">
+&#174; &#xe000;
+</textarea>
+-->
 <div id="output">
 <!--&#174; &#xe000;-->
 
 </div>
 <div id="control">
 		<button id="download"onClick="download()">Save</button>
-						
+		<button id="download"onClick="saveDynamicDataToFile()">SaveDynamic</button>
+	   <button type="button" id="btnSave">bSave</button>
+	
 </div>
 <footer>
     <center>
@@ -364,7 +368,7 @@
 <script src="js/convertuni.js"></script>
 <!--<script src="js/utf8js.js" > </script>-->
 <script src="js/readdoc.js" > </script>
-<!--<script src="js/FileSaver.js"></script> -->
+<script src="js/FileSaver.js"></script>
 <!--<script src="sun.js" > </script>-->
 <!-- https://stackoverflow.com/questions/1017424/pass-vars-to-javascript-via-the-src-attribute  -->
 <!-- <script type="text/javascript" data-parameter_1="value_1" ... src="sun.js"></script>
@@ -550,7 +554,7 @@ var do_file = (function() {
 		var reader = new FileReader();
 		reader.onload = function(e) {
 			var data = e.target.result;
-			console.log(data);
+			console.log(buf2hex(data));
 			if (TXT) {
 				console.log('file',data)
 				SUNbuffer = buf2hex(data)
@@ -712,22 +716,85 @@ function changeFont(f) {
 //document.getElementById('csfont').value = f;
 }
 
-
-function download(){
+/*
+function xdownload(){
     var a = document.body.appendChild(
         document.createElement("a")
     );
-    a.download = "export.html";
-    a.href = "data:text/html," + document.getElementById("output").innerHTML;
+    a.download = "export.txt";
+	//inner = document.getElementById("output").innerHTML;
+	inner = document.getElementById("output").textContent;
+   // a.href = "data:text/html," + document.getElementById("output").innerHTML;
+	a.href = "data:text/plain" + inner;
     a.click();
+	//console.log(buf2hex(inner))
 }
+*/
+function download() {
+	filename = 'ex.txt'
+	text = document.getElementById("output").textContent;
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
+
+
 /*
+
 function saveDynamicDataToFile() {
 
-	var userInput = document.getElementById("output").innerHTML
-	
+	var userInput = document.getElementById("output").textContent;
+	//console.log(buf2hex(userInput))
 	var blob = new Blob([userInput], { type: "text/plain;charset=utf-8" });
 	saveAs(blob, "dynamic.txt");
+}
+
+
+//var download_button = document.getElementById('download');
+//download_button.onclick = download;
+
+
+// https://www.thewebflash.com/reading-and-creating-text-files-using-the-html5-file-api/
+document.getElementById('btnSave').onclick = function() {
+  if ('Blob' in window) {
+    var fileName = prompt('Please enter file name to save', 'Untitled.txt');
+    if (fileName) {
+      //var textToWrite = document.getElementById('output').value.replace(/\n/g, '\r\n');
+	  var textToWrite = document.getElementById('output').innerHTML.replace(/\n/g, '\r\n');
+      var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
+
+      if ('msSaveOrOpenBlob' in navigator) {
+        navigator.msSaveOrOpenBlob(textFileAsBlob, fileName);
+      } else {
+        var downloadLink = document.createElement('a');
+        downloadLink.download = fileName;
+        downloadLink.innerHTML = 'Download File';
+        if ('webkitURL' in window) {
+          // Chrome allows the link to be clicked without actually adding it to the DOM.
+          downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+        } else {
+          // Firefox requires the link to be added to the DOM before it can be clicked.
+          downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+          downloadLink.onclick = destroyClickedElement;
+          downloadLink.style.display = 'none';
+          document.body.appendChild(downloadLink);
+        }
+
+        downloadLink.click();
+      }
+    }
+  } else {
+    alert('Your browser does not support the HTML5 Blob.');
+  }
+};
+
+function destroyClickedElement(event) {
+  document.body.removeChild(event.target);
 }
 
 function readFile(input) {
