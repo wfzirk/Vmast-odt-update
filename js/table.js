@@ -1,12 +1,14 @@
 var fontCol = 0;
 var uniCol = 2;
 var nameCol = 1;
-var synCol = 4;
-var xrefCol = 3;
+//var synCol = 4;
+//var xrefCol = 3;
+refCol = 3;
 var noCols = 3;
 	
 // find font column and unicode column	
 function findCol(arry) {
+	console.log('findcol',arry.length);
 	var t0 = performance.now();
 	var found = false;
 	var rowx = 0;
@@ -36,12 +38,12 @@ function findCol(arry) {
 	}
 	noCols = arry[5].length;
 	if (fontCol === 0 && uniCol == 3) {
-		nameCol = 1
-		synCol = 2
-		xrefCol = 4
+		nameCol = 2
+		refcol = 4
+
 	} 	
 		
-	console.log(noCols,fontCol, uniCol, nameCol, synCol, xrefCol);
+	console.log("noCols %d font %d name %d uni %d, ref %d",noCols,fontCol, nameCol, uniCol, refCol);
 	var t1 = performance.now();
 	console.log("findCol " + (t1 - t0) + " milliseconds.");
 }
@@ -51,7 +53,7 @@ function generateTable(lines){
 	findCol(lines)
 	console.log('generateTable');
 	var t0 = performance.now();
-	document.getElementById("output").innerHTML = "";
+	document.getElementById("dict").innerHTML = "";
 	var table = document.createElement("table");
 	table.id = "searchtable";
 	table.className = 'xreftable';
@@ -68,15 +70,16 @@ function generateTable(lines){
 	table.caption.innerHTML = lines[0];
 	// make header
 	var row = document.createElement('TR');
-	for (var j = 0; j < len; j++) {
+	for (var j = 1; j < len; j++) {
 		var th = document.createElement("TH");
 		th.appendChild(document.createTextNode('col '+j));
 		var fontCol = 0;
-
+		/*
 		if (j === fontCol) {
 			th.className = "fonticon";
 			th.innerHTML = "Font";
-		}
+		}*/
+		if (j != nameCol) continue;
 		if (j === uniCol) {
 			th.className = "unicol";
 			th.innerHTML = "Unicode";
@@ -85,14 +88,12 @@ function generateTable(lines){
 			th.className = "nameCol";
 			th.innerHTML = "Name";
 		}
-		if (j === synCol) {
-			th.className = "synCol";
-			th.innerHTML = "Synonym";
+		/*
+		if (j === refCol) {
+			th.className = "refCol";
+			th.innerHTML = "Reference";
 		}
-		if (j === xrefCol) {
-			th.className = "xrefCol";
-			th.innerHTML = "XRef";
-		}
+		*/
 		row.appendChild(th);
 	}
 
@@ -103,80 +104,50 @@ function generateTable(lines){
 		if (lines[i].length > 1) {	// process row
 			var row = document.createElement('TR');
 			row.className = "item";
-			var mismatch = false;
-			var c0;
-		    var c1;
-			for (var j = 0; j < lines[i].length; j++) {
-				var text = "";
-				var td = document.createElement("TD");
-				if (lines[i][j]) text = lines[i][j].trim();
-				if (j ===fontCol) {
-					td.className = "fonticon";
-					c0 = lines[i][fontCol].charCodeAt(0).toString(16).toLowerCase();
-				}
-				if (j === uniCol) {
-					td.className = "unicol";
-					c1 = lines[i][uniCol].toLowerCase();
-				}
-				if (j === nameCol) {
-					td.className = "nameCol";
-				}
-				if (j === synCol) {
-					td.className = "synCol";
-				}
-				if (j === xrefCol) {
-					td.className = "xrefCol";
-					xu = lines[i][xrefCol].slice(-1).charCodeAt(0).toString(16).toLowerCase()
-					if (xu === 'f09e') {
-						row.className = "nameerror";
-						errText = lines[i][nameCol].trim();
-						console.log('not equal',errText)
-						var errdata = "Name error = " +errText+"\ndoes not match kmn file";
-						row.setAttribute("rowdata", errdata);
-						dispModal(row, fontCol, uniCol);
-					}
-					
-				}
-				td.appendChild(document.createTextNode(text));
-				row.appendChild(td);
-			}  // end column process
+			//var mismatch = false;
+			var td = document.createElement("TD");
+			text = lines[i][nameCol]+' ('+lines[i][uniCol].toUpperCase()+')';
+			td.appendChild(document.createTextNode(text));
+			row.appendChild(td)
 			row.style.display = "";
-			if (c0 !== c1) {
-				console.log('not equal',i,c0, c1)
-				var errdata = "Font error\nicon = " +c0+"\nunicode ="+ c1;
-				row.className = "uerror";
-				row.setAttribute("rowdata", errdata);
-				dispModal(row, fontCol, uniCol);
-			}
-
+			
+			
 		}	// end row process
 		tbody.appendChild(row);
 	}  // end process line
 	table.appendChild(tbody);
-	document.getElementById("output").appendChild(table);
+	document.getElementById("dict").appendChild(table);
+	console.log(table)
 	var t1 = performance.now();
 	console.log("generateTable " + (t1 - t0) + " milliseconds.");
+	
+	/*
+	table.addEventListener('click', function(event) {
+		const row = event.target.parentNode; 
+		console.log(row.textContent)
+	}); */
+	return table;
 }
 
 
-  function toHex(str) {
-    var result = '';
-    for (var i=0; i<str.length; i++) {
-      result += str.charCodeAt(i).toString(16);
-    }
+function toHex(str) {
+	var result = '';
+	for (var i=0; i<str.length; i++) {
+		result += str.charCodeAt(i).toString(16);
+	}
 	//console.log('toHex', str, result);
-	 return result;
-  }
-  
-   function toHexArray(str) {
-    var result = [];
-    for (var i=0; i<str.length; i++) {
-      result.push(str.charCodeAt(i).toString(16));
-    }
+	return result;
+}
+
+function toHexArray(str) {
+	var result = [];
+	for (var i=0; i<str.length; i++) {
+		result.push(str.charCodeAt(i).toString(16));
+	}
 	//console.log('toHexArr', str, result);
-	 return result;
-  }
-  
+	return result;
+}
+
 
 function jscsvToArray(text) {
 	console.log('xcsv...')
@@ -221,20 +192,25 @@ function csvToArray(text) {
     return ret;
 };
 
-function search_Table(){
-	var input = document.getElementById('xsearch').value.toUpperCase();
+function search_Table(input){
+	search_words = []
+	srchType = 'char';
+	input = input.toUpperCase()
+	console.log('searchTable', input);
+	//var input = document.getElementById('xsearch').value.toUpperCase();
 	var filter =  input.split(' '); 
-console.log('searchtable',srchType, input)	
+	console.log('searchtable',srchType, input, filter)	
 	table = document.getElementById("searchtable");
 	tr = table.getElementsByTagName("tr");
 	for (i = 1; i < tr.length; i++) {
 		td = tr[i].getElementsByTagName("td") ; 
 		var txt = "+";
-		for(j=1 ; j < td.length ; j++) {
+		for(j=0 ; j < td.length ; j++) {
 			  let tdata = td[j] ;
 			  if (tdata) {
 				 txt = txt +'+'+ tdata.innerHTML.toUpperCase();
 			  }
+			  //console.log('td.length',td.length, txt)
 		}
 		//console.log('srch',txt, 'filter',filter);
 		if (srchType === 'word') {  // word search
@@ -253,6 +229,7 @@ console.log('searchtable',srchType, input)
 		} else {			// char search
 			var found = true;
 			for(var f = 0; f < filter.length; f++) {
+				//console.log('filter[f]', filter[f],'txt', txt,'input', input)
 				if (txt.indexOf(filter[f])  === -1) { 
 					found = false;
 				}
@@ -261,11 +238,14 @@ console.log('searchtable',srchType, input)
 		//found = arrayContains(txt, filter)
 		//console.log(i,input, txt, found)
 		if (found) {
-				tr[i].style.display = "";
+				tr[i].style.display = "";	
+				search_words.push(tr[i].textContent);
 		} else {
 				tr[i].style.display = "none";
 		}
 	}
+	//console.log('search_words',search_words);
+	return search_words;
 }
 
 

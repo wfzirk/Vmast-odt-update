@@ -52,9 +52,11 @@
 	html { height:100%; }
 		
 	body {
-		height: 100%;
+		/*height: 100%; */
+		height: 700px;
 		width = 600px;
 		line-height: normal;
+		margin: 1px;
 		
 	}
 	
@@ -68,14 +70,19 @@
 		font-size:12px;
 	}
 	
+	control {
+		height: 15px;
+	}
+	
 	footer {
 		color: lightgray;
 		font-family: var(--sun-font); 
+		height: 15px;
 	}
 
 	span.btm {
 		vertical-align:sub;
-		font-size: 36px;
+		font-size: 26px;
 		float: right;
 	}
 
@@ -83,16 +90,41 @@
 		width: 100%
 	}	
 	
-	#output {
+	#workarea {
+        content: "";
+        display: table;
+        clear: both;
+		float: left;
+		height: 450px;
+		width: 100%;
+      }
+	  
+	#output, #dict {
 		font-family: var(--sun-font); 
 		font-size: 26px;
-		height: 55%;
-		overflow-y: scroll;
-		scroll-behavior: smooth; 
-		border-width: 1px;
-		padding: 1px;
 		border-style: inset;
 		border-color: lightblue;
+		height: 450px;
+
+	}
+	
+	#output {
+		overflow-y: scroll;
+		scroll-behavior: smooth; 
+		/*width: 500px; */
+		width: 83%;
+		float: right;
+		height:450px;
+	}
+	
+	#dict {
+		overflow-y: scroll;
+		scroll-behavior: smooth; 
+		/*width: 100px;*/
+		width: 15%;
+		height: 450px;
+		float: left;
+
 	}
 	
 	#splitlabel {
@@ -132,7 +164,7 @@
 		word-wrap: break-word;
 		min-width: 25px;
 	}
-
+	
 	.xreftable td.nameCol, .xreftable th.nameCol {
 		 word-wrap: break-word;
 		 width: 100px;
@@ -143,7 +175,6 @@
 		width: 120px;
 	}
 	.xreftable td.xrefCol, .xreftable th.xrefCol {
-		/*vertical-align: top;*/
 		line-height: 15px;
 	}
 
@@ -174,19 +205,16 @@
 		width: 60px;
 	}
 
-		
 
-		 /*Table Even Rows Styles*/
 	 .xreftable tbody, .xreftable tr:nth-child(even){
 		 background-color: #efefef;
 	 }
 
-		 /*Table ODD Rows Styles*/
+
 	 .xreftable tbody, .xreftable tr:nth-child(odd){
 		 background-color: #dfdfdf;
 	 }
 
-		 /*Table Row HOver Style*/
 	 .xreftable table, .xreftable tbody, .xreftable tr:hover{
 		 background-color: #ffffd8;
 	 }
@@ -281,7 +309,7 @@
 </style>
 
 </head>
-<body>
+<body id="main">
 
 	<form >
 		<div id="title">V-Mast Doc Update
@@ -321,27 +349,29 @@
 
 			</div>
 		</fieldset>
+		
 	</form>
-<!--	
-<textarea id="xoutput" rows="8">
-&#174; &#xe000;
-</textarea>
--->
-<div id="output">
-<!--&#174; &#xe000;-->
 
-</div>
+	<div id="workarea">
+		<div id="dict" >
+			<span style="color:lightgray";>Dictionary</span>
+		</div>
+		<div id="output" >   <!--contentEditable="false"> -->
+			<span style="color:lightgray";>Document</span>
+		</div>
+	</div>
+<hr>
 <div id="control">
+<center>
 		<button id="download"onClick="download()">Save</button>
-	
+		</center>
 </div>
 <footer>
-    <center>
-      <p id="copyright">&copy; Wilbur Zirk 2020 <span class="btm">&#xe037; &#xe01a; &#xe127;</span>
-	  </p>
-    </center>
-  </footer>
-  
+	<center>
+		  <p id="copyright">&copy; Wilbur Zirk 2020 <span class="btm">&#xe037; &#xe01a; &#xe127;</span>
+		  </p>
+	</center>
+</footer>
 <!-- The Modal -->
 <div id="myModal" class="modal">
 
@@ -352,8 +382,12 @@
       <p>Error</p>
     </div>
     <div class="modal-body">
-      <p id="mdisp" >Error on row</p>
+	<select id="selectElementId"></select>
+         <p id="mdisp" >option selected</p> 
+		 <input type="button" id="selOpt" >
 	</div>
+	
+	</body>
   </div>
 
 </div>
@@ -364,13 +398,8 @@
 <script src="js/table.js" id="tbl"></script>
 <script src="js/modal.js"></script>
 <script src="js/convertuni.js"></script>
-<!--<script src="js/utf8js.js" > </script>-->
 <script src="js/readdoc.js" > </script>
-<script src="js/FileSaver.js"></script>
-<!--<script src="sun.js" > </script>-->
-<!-- https://stackoverflow.com/questions/1017424/pass-vars-to-javascript-via-the-src-attribute  -->
-<!-- <script type="text/javascript" data-parameter_1="value_1" ... src="sun.js"></script>
--->
+<!--<script src="js/popupmenu.js" > </script>-->
 
 <script>
 var debug = false;
@@ -379,37 +408,18 @@ var CSV = false;
 var TXT = false;
 var global_wb;
 //var srchType = document.querySelector('input[name = wsrch]:checked').value
-var colValues =[];
+//var colValues =[];
 
-var csvArray = [];
-var SUNbuffer = "";
-
+//var csvArray = [];
+//var SUNbuffer = "";
+var sunfile_loaded = false;
+var table_loaded = false;
 //var fval = "SUNBF77_810_EN"
 window.addEventListener('DOMContentLoaded', (event) => {
 	console.log('DOM fully loaded')
-	console.log(window.location.pathname)
-	console.log(document.location.pathname)
-	//fval = "SUNBF77_810_EN"
-//document.getElementById('sfont').value = fval;
-	//document.getElementById('csfont').value = fval;
 	fval = document.getElementById('selFont').value;
 	changeFont(fval);
-	/*
-	inner = document.getElementById("output").innerHTML;	
 
-	b = ["ee","ac","8d"]
-	uni = convertUTF82CP(b).toLowerCase();
-	var char = unescape('%u' + uni);
-	console.log( b, uni, char, typeof b, typeof uni, typeof char)
-	inner = inner+"<br> uni "+char
-	d = 'efbbbf4a6f686e20333a31360d0a0d0aee8dbe20313620ee80b6ee809a20ee84a92020ee8dbe09686920746865726520ee80b620ee828320ee88a320'
-	u =  String.fromCharCode.apply(null, new Int16Array(d));
-	inner = inner+"<br> hexstr "+u
-	e = 'John 3:16  16  Aaron Ziphron   Aaron	 '
-	inner = inner+"<br> gdoc  "+e
-
-	document.getElementById("output").innerHTML = inner
-	*/
 });
 
 /*
@@ -442,23 +452,20 @@ function fixUnicode(lines) {
 				
 				uni = convertUTF82CP(hArry).toLowerCase();
 				var char = unescape('%u' + uni);
-				//console.log("%s %s %s",rowx[j][0], rowx[j][1],rowx[j][2])
-				//console.log(rowx[j], rowx[j].length,hArry, uni, char, typeof rowx[j], typeof uni, typeof char)
 				lines[i][j] = char;
 			}
 	}
-	console.log('csvfix',lines);
-	//document.getElementById("output").innerHTML=lines
+	//console.log('csvfix',lines);
 	var t1 = performance.now();
 	console.log("fixUnicode " + (t1 - t0) + " milliseconds.");
 	return lines;
 }
-
+/*
 function hex2Unicode(hexAry) {
 	console.log(hexAry, hexAry.length)
 
 }
-
+*/
 
 var process_wb = (function() {
 	//var OUT = document.getElementById('output');
@@ -490,50 +497,15 @@ var process_wb = (function() {
 
 		if (CSV) csvArray = fixUnicode(csvArray);
 		
+		table = generateTable(csvArray);
+		if (table) table_loaded = true;
+		
 		var t1 = performance.now();
 		console.log("process_wb "+ (t1 - t0) + " milliseconds.");
 	};
 
 })();
-/*
-function chunkit(str) {
-	var chunks = [];
 
-	for (var i = 0, charsLength = str.length; i < charsLength; i += 2) {
-		chunks.push(str.substring(i, i + 2));
-	}
-	return chunks
-}
-*/
-
-	function UTF8ToText(x){
-   	    var result = "";
-		console.log(x)
-   	    try {
-   	        //if(chkutf8){
-   	        //    x = x.toString();
-   	        //    for (var i = 0; (i < x.length && x.substr(i, 2) !== '00'); i += 2)
-   	        //        result += String.fromCharCode(parseInt(x.substr(i, 2), 16));
-   	        //} else {
-   	            x = x.replace(/\\x/gi,"");
-   	            x = x.toString();
-   	            for (var i = 0; (i < x.length && x.substr(i, 2) !== '00'); i += 2)
-   	                result += String.fromCharCode(parseInt(x.substr(i, 2), 16));
-   	       // }
-   	        result = decodeURIComponent(escape(result));
-   	    } catch(err) {
-   	        return err.message;
-   	    } finally {
-   	        return result;
-   	    }
-   	}
-/*   	
-const fromHexString = hexString =>
-  new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-
-const toHexString = bytes =>
-  bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
-*/
 var do_file = (function() {
 	return function do_file(files) {
 		console.log('do_file');
@@ -552,18 +524,10 @@ var do_file = (function() {
 		var reader = new FileReader();
 		reader.onload = function(e) {
 			var data = e.target.result;
-			console.log(buf2hex(data));
 			if (TXT) {
-				console.log('file',data)
 				SUNbuffer = buf2hex(data)
-				
-				//gdocStr = String.fromCharCode.apply(null, new Uint8Array(data));
-				//document.getElementById("output").innerHTML = gdocStr;
-				
 				document.getElementById("output").innerHTML = UTF8ToText(SUNbuffer)
-				
-		
-
+				sunfile_loaded = true;
 			} else {
 				process_wb(X.read(data, {type:'array'}));
 			}
@@ -585,15 +549,16 @@ var do_file = (function() {
 
 
 function processData() {
-	console.log('processData', SUNbuffer.length, csvArray.length)
-	if (SUNbuffer.length > 0 && csvArray.length > 0) {
+	//console.log('processData', SUNbuffer.length, csvArray.length)
+	if (sunfile_loaded && table_loaded) {
 		console.log('both files loaded')
-		readDoc(document.getElementById("output").innerHTML, csvArray)
+		readDoc(document.getElementById("output").textContent, csvArray)
 	}
 }
 
 (function() {
 	var drop = document.getElementById('fdrop');
+	//var drop = document.getElementById('main');
 	if(!drop.addEventListener) return;
 
 	function handleDrop(e) {
@@ -615,9 +580,6 @@ function processData() {
 	drop.addEventListener('dragover', handleDragover, false);
 	drop.addEventListener('drop', handleDrop, false);
 
-/*})();
-
-(function() { */
 	var xlf = document.getElementById('xlf');
 	if(!xlf.addEventListener) return;
 	var txlf = document.getElementById('txlf');
@@ -627,57 +589,30 @@ function processData() {
 		console.log('file chooser',e)
 		do_file(e.target.files);
 	}
+	
 	xlf.addEventListener('change', handleFile, false);
 	txlf.addEventListener('change', handleFile, false);						
- 
-	//var sfont = document.getElementById('sfont');
-	//if(!sfont.addEventListener) return;
-	
-	//function shandleFile(e) { 
-	//	getFont(); 
-	//}
-	//sfont.addEventListener('change', shandleFile, false);
-	
-	//ar csfont = document.getElementById('csfont');
-	//if(!csfont.addEventListener) return;
-	/*
-	function cshandleFile(e) { 
-		//#e.target.files
-		fval = document.getElementById('fileInput')
-		getFont(fval);
+
+
+	function mouseUp(e) {
+		console.log('mouseup',e)
+		replaceSelectedText('******'); 
 	}
-	*/
-	//csfont.addEventListener('click', cshandleFile, false);
-	//fileInput.addEventListener('click', cshandleFile, false);
-	//document.getElementById('fileInput')
- 
+
+	mouseSel = document.getElementById("output");
+	mouseSel.addEventListener('mouseup', mouseUp, false)
+	//mouseSel.addEventListener('click', mouseClick, false)
+			
 })();
 
 
-//document.getElementById('xlf').value = ""; 
-
-/*
-function fileSelected(input){
-
-	filename = input.files[0].name;
-	  
-	console.log(input.files)
-	console.log('filename',filename)
-	filename = filename.substring(0, filename.lastIndexOf('.')) || filename
-	document.getElementById('csfont').value = filename
-	console.log('fnt',filename)
-	getFont(filename)
-}
-*/
 function optChangeFont() {
 	fval = document.getElementById('selFont').value;
 	getFont(fval);
 }
 
 function getFont(fval) {
-	//fval = document.getElementById('sfont').value;
 	console.log('getFont',fval)
-	//document.documentElement.style.setProperty('--sun-font', fval);
 	changeFont(fval)
 }
 
@@ -710,24 +645,10 @@ function changeFont(f) {
 
 	console.log(fStyle.innerHTML)
 	document.documentElement.style.setProperty('--sun-font', f);
-	//document.getElementById('sfont').value = f;
-//document.getElementById('csfont').value = f;
+
 }
 
-/*
-function xdownload(){
-    var a = document.body.appendChild(
-        document.createElement("a")
-    );
-    a.download = "export.txt";
-	//inner = document.getElementById("output").innerHTML;
-	inner = document.getElementById("output").textContent;
-   // a.href = "data:text/html," + document.getElementById("output").innerHTML;
-	a.href = "data:text/plain" + inner;
-    a.click();
-	//console.log(buf2hex(inner))
-}
-*/
+
 function download() {
 	filename = 'ex.txt'
 	text = document.getElementById("output").textContent;
@@ -741,78 +662,6 @@ function download() {
   document.body.removeChild(element);
 }
 
-
-/*
-
-function saveDynamicDataToFile() {
-
-	var userInput = document.getElementById("output").textContent;
-	//console.log(buf2hex(userInput))
-	var blob = new Blob([userInput], { type: "text/plain;charset=utf-8" });
-	saveAs(blob, "dynamic.txt");
-}
-
-
-//var download_button = document.getElementById('download');
-//download_button.onclick = download;
-
-
-// https://www.thewebflash.com/reading-and-creating-text-files-using-the-html5-file-api/
-document.getElementById('btnSave').onclick = function() {
-  if ('Blob' in window) {
-    var fileName = prompt('Please enter file name to save', 'Untitled.txt');
-    if (fileName) {
-      //var textToWrite = document.getElementById('output').value.replace(/\n/g, '\r\n');
-	  var textToWrite = document.getElementById('output').innerHTML.replace(/\n/g, '\r\n');
-      var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
-
-      if ('msSaveOrOpenBlob' in navigator) {
-        navigator.msSaveOrOpenBlob(textFileAsBlob, fileName);
-      } else {
-        var downloadLink = document.createElement('a');
-        downloadLink.download = fileName;
-        downloadLink.innerHTML = 'Download File';
-        if ('webkitURL' in window) {
-          // Chrome allows the link to be clicked without actually adding it to the DOM.
-          downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-        } else {
-          // Firefox requires the link to be added to the DOM before it can be clicked.
-          downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-          downloadLink.onclick = destroyClickedElement;
-          downloadLink.style.display = 'none';
-          document.body.appendChild(downloadLink);
-        }
-
-        downloadLink.click();
-      }
-    }
-  } else {
-    alert('Your browser does not support the HTML5 Blob.');
-  }
-};
-
-function destroyClickedElement(event) {
-  document.body.removeChild(event.target);
-}
-
-function readFile(input) {
-  let file = input.files[0];
-	console.log(file.name)
-  let reader = new FileReader();
-
-  reader.readAsText(file);
-
-  reader.onload = function() {
-    //console.log(reader.result);
-  };
-
-  reader.onerror = function() {
-    console.log(reader.error);
-  };
-
-}
-
-*/
 </script>
 </body>
 </html>

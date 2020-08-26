@@ -1,170 +1,135 @@
 
-/*
-(function(window){
-		// https://ourcodeworld.com/articles/read/188/encode-and-decode-html-entities-using-pure-javascript
-	window.htmlentities = {
-		/**
-		 * Converts a string to its html characters completely.
-		 *
-		 * @param {String} str String with unescaped HTML characters
-		 **/
-		 /*
-		encode : function(str) {
-			var buf = [];
-			
-			for (var i=str.length-1;i>=0;i--) {
-				buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
-			}
-			
-			return buf.join('');
-		},
-		/**
-		 * Converts an html characterSet into its original character.
-		 *
-		 * @param {String} str htmlSet entities
-		 **/
-		 /*
-		decode : function(str) {
-			return str.replace(/&#(\d+);/g, function(match, dec) {
-				return String.fromCharCode(dec);
-			});
-		}
-	};
-})(window);
-
-
-function typedArrayToUnicodeString(ua) {
-    var binstr = Array.prototype.map.call(ua, function (ch) {
-        return String.fromCharCode(ch);
-    }).join('');
-    var escstr = binstr.replace(/(.)/g, function (m, p) {
-        var code = p.charCodeAt(p).toString(16).toUpperCase();
-        if (code.length < 2) {
-            code = '0' + code;
-        }
-        return '%' + code;
-    });
-    return decodeURIComponent(escstr);
-}
-
-*/
-/*
-  function Uint8Array2Hex(str) {
-    var result = '';
-    for (var i=0; i<str.length; i++) {
-      result += str.charCodeAt(i).toString(16);
-    }
-	console.log('toHex', str, result);
-	 return result;
-  }
-  
-  function mixedUnicodeAscii2String(str) {
-	// https://stackoverflow.com/questions/6400778/how-to-convert-mixed-ascii-and-unicode-to-a-string-in-javascript
-	var enc=encodeURIComponent(str)
-	//console.log('enc', enc)
-
-	var dec = decodeURIComponent(enc)
-	return dec
-  }
-  
-  
-	String.prototype.replaceString = function (index, string) {
-		//https://stackoverflow.com/questions/4313841/insert-a-string-at-a-specific-index
-		if (index > 0)
-			return this.substring(0, index) + string + this.substring(index, this.length);
-
-		return string + this;
-	};
-  
-  
-  
-  function Utf8ArrayToStr(array) {
-    var out, i, len, c;
-    var char2, char3;
-
-    out = "";
-    len = array.length;
-    i = 0;
-    while(i < len) {
-    c = array[i++];
-    switch(c >> 4)
-    {       case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-        // 0xxxxxxx
-        out += String.fromCharCode(c);
-        break;
-      case 12: case 13:
-        // 110x xxxx   10xx xxxx
-        char2 = array[i++];
-        out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-        break;
-      case 14:
-        // 1110 xxxx  10xx xxxx  10xx xxxx
-        char2 = array[i++];
-        char3 = array[i++];
-        out += String.fromCharCode(((c & 0x0F) << 12) |
-                       ((char2 & 0x3F) << 6) |
-                       ((char3 & 0x3F) << 0));
-        break;
-    }
-    }
-
-    return out;
-}
-*/  
-  
-  
-/*  
-   function xxxxxxtoHexArray(str) {
-    var result = [];
-    for (var i=0; i<str.length; i++) {
-      result.push(str.charCodeAt(i).toString(16));
-    }
-	//console.log('toHexArr', str, result);
-	 return result;
-  }
-*/  
 
 function buf2hex(buffer) { // buffer is an ArrayBuffer
   return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
 }
 
-function hex2ascii(str1)
- {
-	var hex  = str1.toString();
-	var str = '';
-	for (var n = 0; n < hex.length; n += 2) {
-		str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+/*
+function chunkit(str) {
+	var chunks = [];
+
+	for (var i = 0, charsLength = str.length; i < charsLength; i += 2) {
+		chunks.push(str.substring(i, i + 2));
 	}
-	return str;
- }
- 
-function hex2char(str) {
-	//#String.fromCharCode(i)
-	var str = '';
-	for (var n = 0; n < str.length; n += 2) {
-		str += String.fromCharCode(substr(n, 2));
+	return chunks
+}
+*/
+
+function UTF8ToText(x){
+	var result = "";
+	//console.log(x)
+	try {
+		//if(chkutf8){
+		//    x = x.toString();
+		//    for (var i = 0; (i < x.length && x.substr(i, 2) !== '00'); i += 2)
+		//        result += String.fromCharCode(parseInt(x.substr(i, 2), 16));
+		//} else {
+			x = x.replace(/\\x/gi,"");
+			x = x.toString();
+			for (var i = 0; (i < x.length && x.substr(i, 2) !== '00'); i += 2)
+				result += String.fromCharCode(parseInt(x.substr(i, 2), 16));
+	   // }
+		result = decodeURIComponent(escape(result));
+	} catch(err) {
+		return err.message;
+	} finally {
+		return result;
 	}
-	console.log(str)
-	return str;
 }
 
- 
-function ab2str(buf) {
-  return String.fromCharCode.apply(null, new Int8Array(buf));
-} 
- 
- 
-function arrayToString(arr) {
-  let str = '';
-  arr.forEach(function(i, index) {
-    str += i;
-    if (index != (arr.length - 1)) {
-      str += ',';
-    };
-  });
-  return str;
+
+function getSelectionPosition () {
+    var selection = window.getSelection();
+	data = selection.focusNode.data[selection.focusOffset]
+
+	offset = selection.focusOffset;
+	console.log(data)
+	
+	//text = data.substring(0, 1)
+	console.log('wordat', offset)
+
 }
 
+	
+	
+function popup(searchWords) {
+	//dispModal(row, fontCol, uniCol);
+	sel = dispModal(searchWords);
+	console.log('dispmodal',sel);
+	return sel;
+
+}
+	
+function replaceSelectedText(replacementText) {
+	// https://stackoverflow.com/questions/3997659/replace-selected-text-in-contenteditable-div
+	getSelectionPosition();
+	if (!table_loaded) { 
+		alert("Dictionary file has not been loaded.");
+		return;
+	}	
+	var  range;
+	var winSel = window.getSelection();
+	var selText = winSel.toString();
+	var selHex = toHex(selText).toLowerCase();
+	console.log(selHex.length)
+	console.log(selHex[0]);
+	console.log(selText, selText.length, toHex(selText));
+	if (selHex.length === 4 && selHex[0] ==='e') {
+		alert('Invalid selection.  Choose Ascii word');
+		return;
+	}	
+	
+	if (!confirm("Are you sure you want to change "+selText+"?")) {
+	      return;
+	}
+
+	console.log(winSel.toString());
+    if (winSel) {
+       if (winSel.rangeCount) {
+            range = winSel.getRangeAt(0); 
+			console.log(range)
+            range.deleteContents();
+            range.insertNode(document.createTextNode(replacementText));
+        }
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.text = replacementText;
+    }
+	
+	var searchWords = search_Table(selText);
+	//================================
+	
+	dispModal(searchWords);
+	var ws = window.getSelection();
+	var st = ws.toString();
+	console.log(st);
+	/*
+	table.addEventListener('click', function() {
+			
+			var tableRow = event.target.parentNode.textContent;
+
+			console.log(document.activeElement.tagName);
+			// change focus get back selection
+			document.getElementById("output").focus()
+			console.log(document.activeElement.tagName);
+
+			
+			
+			var [newWord, unicode] = tableRow.split(' ')
+			unicode = unicode.replace('(','').replace(')','');
+			var char = unescape('%u'+unicode)
+			console.log('unicode',unicode, replacementText);
+			
+			var inner = document.getElementById("output").innerHTML;
+			inner = inner.replace(replacementText, char);
+			document.getElementById("output").innerHTML = inner;
+			table.removeEventListener('click', this, false);
+		}, false);
+		*/
+}
+
+
+		   
 function getAllMatchesArray(needle, haystack) {
 	console.log('allmatches',needle, typeof haystack)
 	var index = [];   //, i = -1; 
@@ -194,28 +159,68 @@ function getAllMatchesStr(str, searchToken, preIndex, output){
     return output;
 };
 
-//var str = "my name is 'xyz' and my school name is 'xyz' and my area name is 'xyz' ";
-//var  searchToken ="my";
-//var preIndex = 0;
-
-//console.log(getIndexOfSubStr(str, searchToken, preIndex, []));
- 
 function matchAll(needle, haystack) {
 	return [...haystack.matchAll(new RegExp(needle, 'gi'))].map(a => a.index);
 }
 
+
+/*
+function xreadDoc(docStr, csvArray) {
+	console.log('readDoc')
+	// https://stackoverflow.com/questions/10590098/javascript-regexp-word-boundaries-unicode-characters
+	//wordBndryStart = (?<=^|\P{L});	// for unicode text
+	//wordBndryEnd = (?i)(?<=^|\P{L})xxx(?=\P{L}|$); // xxx is main pattern
+	//wordBndry = (
+	//unicodeString = docStr;
+	//var regexpBMPWord = /([\u0000-\u0019\u0021-\uFFFF])+/gu;
+
+	docStr = docStr.replace(/\s/g, '#')
+	//console.log('mtch', mtch)
+	console.log(docStr)
+	//console.table(unicodeString.match(regexpBMPWord));
+}	
+	
+function spanDoc(docStr, csvArray) {
+	
+		function onmouseoverspan(){
+		this.style.backgroundColor = "red";
+	}
+	function onmouseoutspan(){
+		this.style.backgroundColor = "transparent";
+	}
+	var spans,d = document.getElementById("output");
+	var newText = d.innerHTML.replace(/([\s])([^\s]+)/g, "$1<span>$2</span>");
+         newText = newText.replace(/^([^\s]+)/g, "<span>$1</span>");
+		 newText = newText.replace(/&nbsp;/g, "<span>&nbsp;</span>")
+   for (i in newText) console.log(i, newText[i])
+    d.innerHTML = newText;
+
+	spans = d.getElementsByTagName("span")
+
+	for(var a=0;a<spans.length;a++) {
+		spans[a].onmouseover = onmouseoverspan;
+		spans[a].onmouseout = onmouseoutspan;
+	}
+
+}	
+
+
+
+function xreadDoc(docStr, csvArray) {
+	spanDoc();
+}	
+*/	
+	
 function readDoc(docStr, csvArray) {
 	sepstr = "#"
 	console.log('readdoc',docStr.length, csvArray.length);
 	var allIndexArray = []
 	var wordList = {}
 	//try{
-		docStr = docStr.replace(/ /g, "#");
-		docStr = docStr.replace(/'s/g,"#@");
-		docStr = docStr.replace(/[\x00-\x20]/g, "#");
-
-		console.log(docStr)
-		console.log(csvArray)
+	docStr = docStr.replace(/\s/g, '#')
+	docStr = docStr.replace(/'s/g, '#@')
+		//console.log(docStr)
+		//console.log(csvArray)
 		for (var i in csvArray) {
 			//if (i === 0) continue
 			if (csvArray[i].length < 3) continue
@@ -232,9 +237,9 @@ function readDoc(docStr, csvArray) {
 			searchword  = '#'+word+'#'
 			
 
-			if (i < 40) {
-				console.log('searchword',searchword, unicode);
-			}
+			//if (i < 10) {
+			//	console.log('searchword',searchword, unicode);
+			//}
 			if (searchword.includes('_')) {
 				c = searchword.split('_')
 				//console.log('split',c[0], c[1])
@@ -258,11 +263,7 @@ function readDoc(docStr, csvArray) {
 		}
 
 		console.log(wordList)
-	
-	//} catch(err) {
-	//	console.log('error',err.message);
-	//	console.log('   ',i, csvArray[i], csvArray[i].length,searchword, unicode);
-	//}
+
 	markAllWords(wordList, allIndexArray)
 }	
 		
@@ -285,13 +286,14 @@ console.log('markallwords', wordList, arrayList)
 				word = word.replace(/#/g,'')
 				console.log("word",word, "unicode", uni, "offsets",offsets)
 				p = inner.indexOf(word)
-				console.log(p,word,toHex(inner))
-				inner = inner.replaceAll(word, '<mark>'+unicode+'</mark>');
+				//console.log(p,word,toHex(inner))
+				//inner = inner.replaceAll(word, '<mark>'+unicode+'</mark>');
+				inner = inner.replaceAll(word, '<mark>'+word+'</mark>');
 			//}
 		}	
-
+		//console.log(inner)
 		document.getElementById("output").innerHTML = inner;
-		console.log(inner)
+		//console.log(inner)
 		
 	} catch(err) {
 		console.log('error',err.message);
