@@ -238,18 +238,20 @@ function search_Table(input){
 		//found = arrayContains(txt, filter)
 		//console.log(i,input, txt, found)
 		if (found) {
-				tr[i].style.display = "";	
+				//tr[i].style.display = "";	
 				search_words.push(tr[i].textContent);
 		} else {
 				tr[i].style.display = "none";
 		}
+		
 	}
 	//console.log('search_words',search_words);
+	table.style.display="none";
 	return search_words;
 }
 
-
-function showError() {
+/*
+function xshowError() {
 	//table_mismatch();
 	var input =  document. getElementById("showerr");
 	if (input.checked) {
@@ -276,7 +278,7 @@ function showError() {
 
 	console.log(input.checked);
 }   
-
+*/
 function clearTable() {
     var input, filter, found, srchtable, tr, td, i, j;
     document.getElementById('xsearch').value = "";

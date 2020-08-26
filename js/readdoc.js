@@ -62,7 +62,7 @@ function popup(searchWords) {
 	
 function replaceSelectedText(replacementText) {
 	// https://stackoverflow.com/questions/3997659/replace-selected-text-in-contenteditable-div
-	getSelectionPosition();
+	//getSelectionPosition();
 	if (!table_loaded) { 
 		alert("Dictionary file has not been loaded.");
 		return;
