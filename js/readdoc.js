@@ -60,9 +60,81 @@ function popup(searchWords) {
 
 }
 	
+	
+function optionBox(searchWords) {	
+	var modal = document.getElementById("myModal");
+	var span = document.getElementsByClassName("close")[0];
+	modal.style.display = "block";
+	console.log("optionbox")
+
+	var select = document.getElementById("selectElementId");
+	select.size = 0;
+	//select.onchange = re
+	for (var i in searchWords) {
+		var [newWord, unicode] =searchWords[i].split(' ');
+		unicode = unicode.replace('(','').replace(')','');
+		//var uchar = unescape('%u'+unicode)
+		console.log(searchWords[i],newWord,  unicode)
+		select[i] = new Option(newWord,unicode,false,false)
+	}
+
+	select.size=select.options.length;
+	inp = document.getElementById("selBtn");
+	inp.onclick = replaceText;
+	cncl = document.getElementById("cnclBtn");
+	cncl.onclick = function() {modal.style.display="none";}
+
+	span.onclick = function() {
+		modal.style.display = "none";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+}
+	
+	
+function replaceText(sel) {
+		var modal = document.getElementById("myModal");
+		console.log('replaceText')
+		var sel = document.getElementById("selectElementId");
+		var text= sel.options[sel.selectedIndex].text;
+		var val = sel.options[sel.selectedIndex].value;
+		console.log(text, val);
+
+		//if (!confirm("Are you sure you want to change "+selText+" with "+ text+"?")) {
+		//	modal.style.display = "none";
+	   //   return;
+		//}
+		console.log('replaceText',unicode, text);
+		var uChar = unescape('%u'+val)
+		var winSel = window.getSelection();
+		if (winSel) {
+		   if (winSel.rangeCount) {
+				range = winSel.getRangeAt(0); 
+				console.log(range)
+				range.deleteContents();
+				range.insertNode(document.createTextNode(uChar));
+			}
+		} else if (document.selection && document.selection.createRange) {
+			range = document.selection.createRange();
+			range.text = replacementText;
+		}
+		modal.style.display = "none";
+
+		// remove onclick event	
+		inp = document.getElementById("selBtn").onclick="";
+		sel.innerHTML = "";
+	}		
+	
+	
+	
 function replaceSelectedText(replacementText) {
 	// https://stackoverflow.com/questions/3997659/replace-selected-text-in-contenteditable-div
-	//getSelectionPosition();
+
 	if (!table_loaded) { 
 		alert("Dictionary file has not been loaded.");
 		return;
@@ -74,58 +146,22 @@ function replaceSelectedText(replacementText) {
 	console.log(selHex.length)
 	console.log(selHex[0]);
 	console.log(selText, selText.length, toHex(selText));
+	
+	if (selHex.length === 0) {
+		alert('Invalid selection.  Choose Ascii word');
+		return;
+	}
+	
 	if (selHex.length === 4 && selHex[0] ==='e') {
 		alert('Invalid selection.  Choose Ascii word');
 		return;
 	}	
+	var searchWords = []
+	searchWords = search_Table(selText);
 	
-	if (!confirm("Are you sure you want to change "+selText+"?")) {
-	      return;
-	}
-
-	console.log(winSel.toString());
-    if (winSel) {
-       if (winSel.rangeCount) {
-            range = winSel.getRangeAt(0); 
-			console.log(range)
-            range.deleteContents();
-            range.insertNode(document.createTextNode(replacementText));
-        }
-    } else if (document.selection && document.selection.createRange) {
-        range = document.selection.createRange();
-        range.text = replacementText;
-    }
-	
-	var searchWords = search_Table(selText);
 	//================================
-	
-	dispModal(searchWords);
-	var ws = window.getSelection();
-	var st = ws.toString();
-	console.log(st);
-	/*
-	table.addEventListener('click', function() {
-			
-			var tableRow = event.target.parentNode.textContent;
+	optionBox(searchWords);
 
-			console.log(document.activeElement.tagName);
-			// change focus get back selection
-			document.getElementById("output").focus()
-			console.log(document.activeElement.tagName);
-
-			
-			
-			var [newWord, unicode] = tableRow.split(' ')
-			unicode = unicode.replace('(','').replace(')','');
-			var char = unescape('%u'+unicode)
-			console.log('unicode',unicode, replacementText);
-			
-			var inner = document.getElementById("output").innerHTML;
-			inner = inner.replace(replacementText, char);
-			document.getElementById("output").innerHTML = inner;
-			table.removeEventListener('click', this, false);
-		}, false);
-		*/
 }
 
 
@@ -163,53 +199,13 @@ function matchAll(needle, haystack) {
 	return [...haystack.matchAll(new RegExp(needle, 'gi'))].map(a => a.index);
 }
 
-
-/*
-function xreadDoc(docStr, csvArray) {
-	console.log('readDoc')
-	// https://stackoverflow.com/questions/10590098/javascript-regexp-word-boundaries-unicode-characters
-	//wordBndryStart = (?<=^|\P{L});	// for unicode text
-	//wordBndryEnd = (?i)(?<=^|\P{L})xxx(?=\P{L}|$); // xxx is main pattern
-	//wordBndry = (
-	//unicodeString = docStr;
-	//var regexpBMPWord = /([\u0000-\u0019\u0021-\uFFFF])+/gu;
-
-	docStr = docStr.replace(/\s/g, '#')
-	//console.log('mtch', mtch)
-	console.log(docStr)
-	//console.table(unicodeString.match(regexpBMPWord));
-}	
-	
-function spanDoc(docStr, csvArray) {
-	
-		function onmouseoverspan(){
+function onmouseoverspan(){
 		this.style.backgroundColor = "red";
 	}
-	function onmouseoutspan(){
+function onmouseoutspan(){
 		this.style.backgroundColor = "transparent";
 	}
-	var spans,d = document.getElementById("output");
-	var newText = d.innerHTML.replace(/([\s])([^\s]+)/g, "$1<span>$2</span>");
-         newText = newText.replace(/^([^\s]+)/g, "<span>$1</span>");
-		 newText = newText.replace(/&nbsp;/g, "<span>&nbsp;</span>")
-   for (i in newText) console.log(i, newText[i])
-    d.innerHTML = newText;
 
-	spans = d.getElementsByTagName("span")
-
-	for(var a=0;a<spans.length;a++) {
-		spans[a].onmouseover = onmouseoverspan;
-		spans[a].onmouseout = onmouseoutspan;
-	}
-
-}	
-
-
-
-function xreadDoc(docStr, csvArray) {
-	spanDoc();
-}	
-*/	
 	
 function readDoc(docStr, csvArray) {
 	sepstr = "#"

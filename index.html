@@ -381,26 +381,28 @@
 
   <!-- Modal content -->
   <div class="modal-content">
-    <div class="modal-header">
+   <!-- <div class="modal-header">
       <span class="close">&times;</span>
       <p>Error</p>
-    </div>
+    </div> -->
     <div class="modal-body">
-	<select id="selectElementId"></select>
-         <p id="mdisp" >option selected</p> 
-		 <input type="button" id="selOpt" >
+		<span class="close">&times;</span>
+		<select id="selectElementId"></select>
+		<hr>
+		<input id="selBtn"  type = "button" value = "Select Word" > <!-- # onclick = "replaceText(this);">  -->
+		<input id="cnclBtn"  type = "button" value = "Cancel" >
 	</div>
 	
-	</body>
+
   </div>
 
 </div>
-
+	</body>
 <script src="js/jszip.js"></script>
 <script src="js/xlsx.js"></script>
 <!-- <script src="js/cookie.js"></script> -->
 <script src="js/table.js" id="tbl"></script>
-<script src="js/modal.js"></script>
+<!-- <script src="js/modal.js"></script>-->
 <script src="js/convertuni.js"></script>
 <script src="js/readdoc.js" > </script>
 <!--<script src="js/popupmenu.js" > </script>-->
@@ -604,8 +606,9 @@ function processData() {
 	}
 
 	mouseSel = document.getElementById("output");
-	mouseSel.addEventListener('mouseup', mouseUp, false)
-	//mouseSel.addEventListener('click', mouseClick, false)
+	//mouseSel.addEventListener('mouseup', mouseUp, false)
+	//mouseSel.addEventListener("select", mouseUp, false);
+	mouseSel.addEventListener('click', mouseUp, false)
 			
 })();
 

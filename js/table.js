@@ -18,7 +18,7 @@ function findCol(arry) {
 		for (var j = 0;  j < rowx.length; j++) {  //  eeac8d = eb0d
 			//	https://stackoverflow.com/questions/17267329/converting-unicode-character-to-string-format
 			var	uni = rowx[j].charCodeAt(0).toString(16).toUpperCase();
-			console.log(i, j, '|'+uni+'|', uni.length);
+			//console.log(i, j, '|'+uni+'|', uni.length);
 		    if (uni.length == 4) { 
 				fontCol = j;
 				for (var k = 0;  k < rowx.length; k++){
@@ -64,8 +64,7 @@ function generateTable(lines){
 			len = lines[i].length;
 		}
 	}
-	console.log(lines[5].length)
-
+	
 	table.createCaption();
 	table.caption.innerHTML = lines[0];
 	// make header
@@ -208,7 +207,10 @@ function search_Table(input){
 		for(j=0 ; j < td.length ; j++) {
 			  let tdata = td[j] ;
 			  if (tdata) {
-				 txt = txt +'+'+ tdata.innerHTML.toUpperCase();
+				  //console.log(j, tdata.innerHTML)
+				  t = tdata.innerHTML.split(' ')[0];  // strip off UNICODE not compare on unicode
+				 //txt = txt +'+'+ tdata.innerHTML.toUpperCase
+				 txt = txt +'+'+ t.toUpperCase();
 			  }
 			  //console.log('td.length',td.length, txt)
 		}
@@ -250,35 +252,6 @@ function search_Table(input){
 	return search_words;
 }
 
-/*
-function xshowError() {
-	//table_mismatch();
-	var input =  document. getElementById("showerr");
-	if (input.checked) {
-		input.checked = false;
-		input.value = "  ";
-	} else {
-		input.checked = true;
-		input.value = "\u2713";  //    ✓ ✓
-	}
-	console.log(input.checked);
-	var table = document.getElementById("searchtable");
-	var tr = table.getElementsByTagName("tr");
-	for (var i = 0; i < tr.length; i++) {
-		if (input.checked) {
-			if (tr[i].classList.contains("uerror") || tr[i].classList.contains("nameerror")) {
-				tr[i].style.display = "";
-			} 	else {
-				tr[i].style.display = "none";
-			}
-		} else {
-			tr[i].style.display = "";
-		}
-	}
-
-	console.log(input.checked);
-}   
-*/
 function clearTable() {
     var input, filter, found, srchtable, tr, td, i, j;
     document.getElementById('xsearch').value = "";
