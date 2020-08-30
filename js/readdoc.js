@@ -38,46 +38,37 @@ function UTF8ToText(x){
 }
 
 
-function getSelectionPosition () {
-    var selection = window.getSelection();
-	data = selection.focusNode.data[selection.focusOffset]
+const whitespaceCharacters = [' ', '  ',
+  '\b', '\t', '\n', '\v', '\f', '\r', `\"`, `\'`, `\\`,
+  '\u0008', '\u0009', '\u000A', '\u000B', '\u000C',
+'\u000D', '\u0020','\u0022', '\u0027', '\u005C',
+'\u00A0', '\u2028', '\u2029', '\uFEFF']
 
-	offset = selection.focusOffset;
-	console.log(data)
-	
-	//text = data.substring(0, 1)
-	console.log('wordat', offset)
-
-}
-
-	
-	
-function popup(searchWords) {
-	//dispModal(row, fontCol, uniCol);
-	sel = dispModal(searchWords);
-	console.log('dispmodal',sel);
-	return sel;
-
+// Use includes method on string
+function hasWhiteSpace(s) {
+  const whitespaceChars = whitespaceCharacters;
+  return whitespaceChars.some(char => s.includes(char));
 }
 	
 	
-function optionBox(searchWords) {	
+function optionBox(searchWords, selText) {	
 	var modal = document.getElementById("myModal");
 	var span = document.getElementsByClassName("close")[0];
+	var para = document.getElementById("mselWord")
+	para.innerHTML = "Select SUN word to replace <b>"+selText+"</b>";
 	modal.style.display = "block";
 	console.log("optionbox")
-
+	console.log('searchwords',searchWords.length);
 	var select = document.getElementById("selectElementId");
+	select.innerHTML = "";
 	select.size = 0;
 	//select.onchange = re
 	for (var i in searchWords) {
 		var [newWord, unicode] =searchWords[i].split(' ');
 		unicode = unicode.replace('(','').replace(')','');
-		//var uchar = unescape('%u'+unicode)
-		console.log(searchWords[i],newWord,  unicode)
-		select[i] = new Option(newWord,unicode,false,false)
+		select[i] = new Option(newWord,unicode,false,false);
 	}
-
+	select[0].defaultSelected = true;
 	select.size=select.options.length;
 	inp = document.getElementById("selBtn");
 	inp.onclick = replaceText;
@@ -105,10 +96,6 @@ function replaceText(sel) {
 		var val = sel.options[sel.selectedIndex].value;
 		console.log(text, val);
 
-		//if (!confirm("Are you sure you want to change "+selText+" with "+ text+"?")) {
-		//	modal.style.display = "none";
-	   //   return;
-		//}
 		console.log('replaceText',unicode, text);
 		var uChar = unescape('%u'+val)
 		var winSel = window.getSelection();
@@ -132,7 +119,7 @@ function replaceText(sel) {
 	
 	
 	
-function replaceSelectedText(replacementText) {
+function getSelectedText(replacementText) {
 	// https://stackoverflow.com/questions/3997659/replace-selected-text-in-contenteditable-div
 
 	if (!table_loaded) { 
@@ -143,24 +130,27 @@ function replaceSelectedText(replacementText) {
 	var winSel = window.getSelection();
 	var selText = winSel.toString();
 	var selHex = toHex(selText).toLowerCase();
-	console.log(selHex.length)
-	console.log(selHex[0]);
-	console.log(selText, selText.length, toHex(selText));
+
+	if (hasWhiteSpace(selText)) {
+		//alert('Invalid selection.  Choose Ascii word');
+		return;
+	}
 	
 	if (selHex.length === 0) {
-		alert('Invalid selection.  Choose Ascii word');
+		//alert('Invalid selection.  Choose Ascii word');
 		return;
 	}
 	
 	if (selHex.length === 4 && selHex[0] ==='e') {
-		alert('Invalid selection.  Choose Ascii word');
+		//alert('Invalid selection.  Choose Ascii word');
 		return;
 	}	
+	
 	var searchWords = []
 	searchWords = search_Table(selText);
 	
 	//================================
-	optionBox(searchWords);
+	if (searchWords.length > 0) optionBox(searchWords, selText);
 
 }
 
