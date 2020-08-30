@@ -296,10 +296,10 @@
 
 	.modal-header {
 	  padding: 1px 5px;
-	  background-color: red;
-	  color: white;
-	  font-size: 28px;
-	  font-weight: bold;
+	  background-color: lightblue;
+	  color: darkblue;
+	  font-size: 16px;
+	  font-weight: normal;
 	}
 
 	.modal-body {padding: 2px 16px;}
@@ -335,8 +335,9 @@
 						   <option value = "SUNBF77_810_EN">BACKSUN 810</option>
 						   <option value = "SUN7_7_810">SUN 810</option>
 						</select>
-						<!--<input type = "button" value = "changeFont" onclick = "optChangeFont()" />
-						-->
+						<label style="float:right;">Edit Mode
+							<input type="checkbox" id="editMode"  onclick="toggleEditMode();">
+						</label>
 						<hr>
 						<div> <b>Note:</b> The <b>VMast document</b> must be saved as a<b>".txt"</b> file.
 							Drag or Load both the VMast document file and the Dictionary spreadsheet
@@ -349,16 +350,10 @@
 		</fieldset>
 		
 	</form>
-
-	<!--<div id="workarea">
-		<div id="dict"  >
-			<span style="color:lightgray";>Dictionary</span>
-		</div>-->
-		<div id="output" >   <!--contentEditable="false"> -->
+		<div id="output" contentEditable="false"> 
 			<span style="color:lightgray";>Document</span>
 		</div>
 		<br>
-<!--	</div> -->
 <hr>
 <div id="control">
 <center>
@@ -375,28 +370,24 @@
 <!-- hidden -->
 <div id="dict"  >	</div>
 
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
 
-<!-- The Modal -->
-<div id="myModal" class="modal">
+		  <!-- Modal content -->
+			<div class="modal-content">
+			<div class="modal-header">
+				<span class="close">&times;</span>
+				<p id="mselWord" >Select SUN word to replace </p>
+			</div> 
+			<div class="modal-body">
+				<select id="selectElementId"></select>
+				<hr>
+				<input id="selBtn"  type = "button" value = "Select Word" > <!-- # onclick = "replaceText(this);">  -->
+				<input id="cnclBtn"  type = "button" value = "Cancel" >
+			</div>
+			</div>
 
-  <!-- Modal content -->
-  <div class="modal-content">
-   <!-- <div class="modal-header">
-      <span class="close">&times;</span>
-      <p>Error</p>
-    </div> -->
-    <div class="modal-body">
-		<span class="close">&times;</span>
-		<select id="selectElementId"></select>
-		<hr>
-		<input id="selBtn"  type = "button" value = "Select Word" > <!-- # onclick = "replaceText(this);">  -->
-		<input id="cnclBtn"  type = "button" value = "Cancel" >
-	</div>
-	
-
-  </div>
-
-</div>
+		</div>
 	</body>
 <script src="js/jszip.js"></script>
 <script src="js/xlsx.js"></script>
@@ -413,14 +404,10 @@ var X = XLSX;
 var CSV = false;
 var TXT = false;
 var global_wb;
-//var srchType = document.querySelector('input[name = wsrch]:checked').value
-//var colValues =[];
 
-//var csvArray = [];
-//var SUNbuffer = "";
 var sunfile_loaded = false;
 var table_loaded = false;
-//var fval = "SUNBF77_810_EN"
+
 window.addEventListener('DOMContentLoaded', (event) => {
 	console.log('DOM fully loaded')
 	fval = document.getElementById('selFont').value;
@@ -562,6 +549,20 @@ function processData() {
 	}
 }
 
+function toggleEditMode() {
+	e =document.getElementById("editMode").checked;
+	var contenteditable = document.getElementById("output").contentEditable;
+ 	// if(contenteditable == 'inherit' || contenteditable == 'false'){
+	if (e) {
+	  document.getElementById("output").contentEditable = true;
+	 }else{
+	  document.getElementById("output").contentEditable = false;
+	 }
+}
+
+
+
+
 (function() {
 	var drop = document.getElementById('fdrop');
 	//var drop = document.getElementById('main');
@@ -602,7 +603,7 @@ function processData() {
 
 	function mouseUp(e) {
 		console.log('mouseup',e)
-		replaceSelectedText('******'); 
+		getSelectedText('******'); 
 	}
 
 	mouseSel = document.getElementById("output");
