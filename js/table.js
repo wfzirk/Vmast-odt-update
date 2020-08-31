@@ -193,7 +193,7 @@ function csvToArray(text) {
 
 function search_Table(input){
 	search_words = []
-	srchType = 'char';
+	//srchType = 'char';
 	input = input.toUpperCase()
 	console.log('searchTable', input);
 	//var input = document.getElementById('xsearch').value.toUpperCase();
@@ -221,18 +221,28 @@ function search_Table(input){
 			txt = txt.replace(/:/g,'+')
 			txt = txt.replace(/,/g,'+')
 			//txt = txt.split('+')
-			
+			//txt = txt.replace('++','')
 			var found = true;
 			for(var f = 0; f < filter.length; f++) {
+				console.log('filter[f]', filter[f],'txt', txt,'input', input)
 				if (txt.indexOf('+'+filter[f]+'+')  === -1) { 
 					found = false;
 				}
+				
+				//if (txt.startsWith('+'+filter[f]+'+')  === -1) { 
+				//	found = false;
+				//}
 			}
 		} else {			// char search
 			var found = true;
 			for(var f = 0; f < filter.length; f++) {
-				//console.log('filter[f]', filter[f],'txt', txt,'input', input)
+				s = '++'+filter[f]
+				
+				console.log('filter[f]', s,'txt', txt,'input', input, txt.startsWith(s))
 				if (txt.indexOf(filter[f])  === -1) { 
+					found = false;
+				}
+				if (!txt.startsWith(s) ) { 
 					found = false;
 				}
 			}
@@ -240,7 +250,7 @@ function search_Table(input){
 		//found = arrayContains(txt, filter)
 		//console.log(i,input, txt, found)
 		if (found) {
-				//tr[i].style.display = "";	
+				tr[i].style.display = "";	
 				search_words.push(tr[i].textContent);
 		} else {
 				tr[i].style.display = "none";

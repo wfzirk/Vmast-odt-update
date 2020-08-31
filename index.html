@@ -10,6 +10,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 <title>V-Mast Doc update</title>
+<link href="css/modal.css" rel="stylesheet">
+
 <style>
 	@font-face {
 		font-family: "SUNBF77_810_EN";
@@ -236,73 +238,15 @@
 		
 	}
 	
-
-	/* The Modal (background) */
-	.modal {
-	  display: none; /* Hidden by default */
-	  position: fixed; /* Stay in place */
-	  z-index: 1; /* Sit on top */
-	  padding-top: 100px; /* Location of the box */
-	  left: 0;
-	  top: 0;
-	  width: 100%; /* Full width */
-	  height: 100%; /* Full height */
-	  overflow: auto; /* Enable scroll if needed */
-	  background-color: rgb(0,0,0); /* Fallback color */
-	  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-	}
-
-	/* Modal Content */
-	.modal-content {
-	  position: relative;
-	  background-color: #eeeeee;
-	  margin: auto;
-	  padding: 0;
-	  border: 1px solid #888;
-	  border-radius:5px;
-	  width: 300px;;
-	  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-	  -webkit-animation-name: animatetop;
-	  -webkit-animation-duration: 0.4s;
-	  animation-name: animatetop;
-	  animation-duration: 0.4s
-	}
-
-	/* Add Animation */
-	@-webkit-keyframes animatetop {
-	  from {top:-300px; opacity:0} 
-	  to {top:0; opacity:1}
-	}
-
-	@keyframes animatetop {
-	  from {top:-300px; opacity:0}
-	  to {top:0; opacity:1}
-	}
-
-	/* The Close Button */
-	.close {
-	  color: white;
-	  float: right;
-	  font-size: 28px;
-	  font-weight: bold;
-	}
-
-	.close:hover,
-	.close:focus {
-	  color: #000;
-	  text-decoration: none;
-	  cursor: pointer;
-	}
-
-	.modal-header {
-	  padding: 1px 5px;
-	  background-color: lightblue;
-	  color: darkblue;
-	  font-size: 16px;
-	  font-weight: normal;
-	}
-
-	.modal-body {padding: 2px 16px;}
+	.link {
+    color:blue;
+    text-decoration:underline;
+    cursor:pointer;
+	 font-size: 16px;
+	 float:right;
+	 padding-right:20px;
+	 
+}
 
 </style>
 
@@ -311,8 +255,9 @@
 
 	<form >
 		<div id="title">V-Mast Doc Update
-		<label style="float:right;">10.5</label>
+			<span class="link" onclick="javascript:popup();">Help</span>
 		</div>
+
 		<fieldset id="fdrop">
 			<div style="padding-bottom:5px;">
 				<label for="xlf" style="float:left;" > <strong>Select ODS, XLSX or CSV File:</strong></label>
@@ -335,6 +280,14 @@
 						   <option value = "SUNBF77_810_EN">BACKSUN 810</option>
 						   <option value = "SUN7_7_810">SUN 810</option>
 						</select>
+						<!--<label style='float:center;' > <strong>&nbspSearch Type&nbsp</strong>
+						<span id="radiospan" style="border:1px; border-style:solid; ">
+							<input type="radio" id="wordsrch" name="wsrch" value="word" onClick="setSrch(true)" checked>
+							<label for="wordsrch">Word</label>
+							<input type="radio" id="charsrch" name="wsrch" value="char" onClick="setSrch(false)">
+							<label for="charsrch">Char&nbsp</label>
+						</span>
+					</label>-->
 						<label style="float:right;">Edit Mode
 							<input type="checkbox" id="editMode"  onclick="toggleEditMode();">
 						</label>
@@ -407,7 +360,8 @@ var global_wb;
 
 var sunfile_loaded = false;
 var table_loaded = false;
-
+//var srchType = document.querySelector('input[name = wsrch]:checked').value
+var srchType = "char";
 window.addEventListener('DOMContentLoaded', (event) => {
 	console.log('DOM fully loaded')
 	fval = document.getElementById('selFont').value;
@@ -656,6 +610,10 @@ function changeFont(f) {
 
 }
 
+function setSrch(e) {
+	srchType = document.querySelector('input[name = wsrch]:checked').value
+	//search_Table()
+}
 
 function download() {
 	filename = 'ex.txt'
@@ -670,6 +628,13 @@ function download() {
   document.body.removeChild(element);
 }
 
+
+function popup() {
+	console.log('popup');
+	let newWindow = open('help.html', 'example', 'width=500,height=300')
+	newWindow.focus();
+
+}
 </script>
 </body>
 </html>
