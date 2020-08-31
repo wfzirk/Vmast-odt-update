@@ -10,6 +10,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 <title>V-Mast Doc update</title>
+<link href="css/index.css" rel="stylesheet">
+<link href="css/table.css" rel="stylesheet">
 <link href="css/modal.css" rel="stylesheet">
 
 <style>
@@ -51,202 +53,7 @@
 		--sun-font: 'BACKSUN';
 	}
 	
-	html { height:100%; }
-		
-	body {
-		/*height: 100%; */
-		height: 700px;
-		width = 600px;
-		line-height: normal;
-		margin: 1px;
-		
-	}
-	
-	#title {
-		font-size: 20px;
-		text-align: center;
-		font-weight: bold;
-	}
-	
-	#title label {
-		font-size:12px;
-	}
-	
-	control {
-		height: 15px;
-	}
-	
-	footer {
-		color: lightgray;
-		font-family: var(--sun-font); 
-		height: 15px;
-	}
 
-	span.btm {
-		vertical-align:sub;
-		font-size: 26px;
-		float: right;
-	}
-
-	div.filetable {
-		width: 100%
-	}	
-/*	
-	#workarea {
-        content: "";
-        display: table;
-        clear: both;
-		float: left;
-		height: 450px;
-		width: 100%;
-      }
-	*/  
-/*	#output, #dict {*/
-	#output {
-		font-family: var(--sun-font); 
-		font-size: 26px;
-		border-style: inset;
-		border-color: lightblue;
-		overflow-y: scroll;
-		scroll-behavior: smooth; 
-		/*width: 500px; */
-		width: 100%;
-		/*float: right;*/
-		height:400px;
-	}
-	
-	#dict {
-/*		overflow-y: scroll;
-		scroll-behavior: smooth; 
-		/*width: 100px;*/
-		width: 15%;
-		height: 450px;
-		float: left;  */
-		height: 0px;
-		display: none;
-
-	}
-	
-	#splitlabel {
-		font-size: 10px;
-		font-weight: bold;
-	}
-	#lblclear {
-		font-size: 12px;
-		font-weight: bold;
-	}
-	
-	table.xreftable {
-		 border-width: 1px;
-		 border-spacing: 0;
-		 border-style: outset;
-		 border-color: black;
-		 border-collapse: separate; 
-		 background-color: white; 
-		 font-size: 14px;
-		 table-layout: fixed;
-		 margin-bottom: 5px;
-		 width: 100%; 
-		 empty-cells: show;
-
-	}
-	.xreftable tr {
-		vertical-align: middle;
-		padding-top: 5px;
-	}
-
-	.xreftable td, .xreftable th {
-		border-width: 1px;
-		padding: 1px;
-		border-style: inset;
-		border-color: lightblue;
-		font-size: 14px;
-		word-wrap: break-word;
-		min-width: 25px;
-	}
-	
-	.xreftable td.nameCol, .xreftable th.nameCol {
-		 word-wrap: break-word;
-		 width: 100px;
-	}
-	
-	.xreftable td.synCol, .xreftable th.synCol {
-		line-height: 15px;
-		width: 120px;
-	}
-	.xreftable td.xrefCol, .xreftable th.xrefCol {
-		line-height: 15px;
-	}
-
-	.xreftable td.fonticon {
-		font-size: 32px;
-		font-family: var(--sun-font); 
-		vertical-align: middle;
-		color: blue;
-		width: 45px;
-		height: 100%;
-	}
-	.xreftable th.fonticon {
-		text-align: center;
-		color: blue;
-		width: 45px;
-	}
-	
-	.xreftable td.unicol {
-		text-align: center;
-		font-size: 14px;
-		font-family: var(--sun-font); 
-		color: blue;
-		width: 60px;
-	}
-	.xreftable th.unicol {
-		text-align: center;
-		color: blue;
-		width: 60px;
-	}
-
-
-	 .xreftable tbody, .xreftable tr:nth-child(even){
-		 background-color: #efefef;
-	 }
-
-
-	 .xreftable tbody, .xreftable tr:nth-child(odd){
-		 background-color: #dfdfdf;
-	 }
-
-	 .xreftable table, .xreftable tbody, .xreftable tr:hover{
-		 background-color: #ffffd8;
-	 }
-
-
-	.uerror {
-		  color: red;
-	 }
-	.nameerror {
-		  color: gray;
-	 }
-	
-	 
-
-	#drop {
-		border:2px dashed #bbb;
-		border-radius:5px;
-		padding:5px;
-		text-align:center;
-		font:20pt bold,"Vollkorn";color:#bbb
-		
-	}
-	
-	.link {
-    color:blue;
-    text-decoration:underline;
-    cursor:pointer;
-	 font-size: 16px;
-	 float:right;
-	 padding-right:20px;
-	 
-}
 
 </style>
 
@@ -279,6 +86,7 @@
 						<select id = "selFont" onChange="optChangeFont()">
 						   <option value = "SUNBF77_810_EN">BACKSUN 810</option>
 						   <option value = "SUN7_7_810">SUN 810</option>
+						   <option value = "SUNBF77_702_FR">BACKSUN702 French</option>
 						</select>
 						<!--<label style='float:center;' > <strong>&nbspSearch Type&nbsp</strong>
 						<span id="radiospan" style="border:1px; border-style:solid; ">
@@ -287,7 +95,7 @@
 							<input type="radio" id="charsrch" name="wsrch" value="char" onClick="setSrch(false)">
 							<label for="charsrch">Char&nbsp</label>
 						</span>
-					</label>-->
+					    </label>-->
 						<label style="float:right;">Edit Mode
 							<input type="checkbox" id="editMode"  onclick="toggleEditMode();">
 						</label>
@@ -631,7 +439,7 @@ function download() {
 
 function popup() {
 	console.log('popup');
-	let newWindow = open('help.html', 'example', 'width=500,height=300')
+	let newWindow = open('help.html', 'example', 'width=500,height=450')
 	newWindow.focus();
 
 }

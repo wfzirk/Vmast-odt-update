@@ -224,7 +224,7 @@ function search_Table(input){
 			//txt = txt.replace('++','')
 			var found = true;
 			for(var f = 0; f < filter.length; f++) {
-				console.log('filter[f]', filter[f],'txt', txt,'input', input)
+				//console.log('filter[f]', filter[f],'txt', txt,'input', input)
 				if (txt.indexOf('+'+filter[f]+'+')  === -1) { 
 					found = false;
 				}
@@ -238,7 +238,7 @@ function search_Table(input){
 			for(var f = 0; f < filter.length; f++) {
 				s = '++'+filter[f]
 				
-				console.log('filter[f]', s,'txt', txt,'input', input, txt.startsWith(s))
+				//console.log('filter[f]', s,'txt', txt,'input', input, txt.startsWith(s))
 				if (txt.indexOf(filter[f])  === -1) { 
 					found = false;
 				}

@@ -1,0 +1,112 @@
+	html { height:100%; }
+		
+	body {
+		/*height: 100%; */
+		height: 700px;
+		width = 600px;
+		line-height: normal;
+		margin: 1px;
+		
+	}
+	
+	#title {
+		font-size: 20px;
+		text-align: center;
+		font-weight: bold;
+	}
+	
+	#title label {
+		font-size:12px;
+	}
+	
+	control {
+		height: 15px;
+	}
+	
+	footer {
+		color: lightgray;
+		font-family: var(--sun-font); 
+		height: 15px;
+	}
+
+	span.btm {
+		vertical-align:sub;
+		font-size: 26px;
+		float: right;
+	}
+
+	div.filetable {
+		width: 100%
+	}	
+/*	
+	#workarea {
+        content: "";
+        display: table;
+        clear: both;
+		float: left;
+		height: 450px;
+		width: 100%;
+      }
+	*/  
+/*	#output, #dict {*/
+	#output {
+		font-family: var(--sun-font); 
+		font-size: 26px;
+		border-style: inset;
+		border-color: lightblue;
+		overflow-y: scroll;
+		scroll-behavior: smooth; 
+		/*width: 500px; */
+		width: 100%;
+		/*float: right;*/
+		height:400px;
+	}
+	
+	#dict {
+/*		overflow-y: scroll;
+		scroll-behavior: smooth; 
+		/*width: 100px;*/
+		width: 15%;
+		height: 450px;
+		float: left;  */
+		height: 0px;
+		display: none;
+
+	}
+	
+	#splitlabel {
+		font-size: 10px;
+		font-weight: bold;
+	}
+	#lblclear {
+		font-size: 12px;
+		font-weight: bold;
+	}
+	
+	
+	.uerror {
+		  color: red;
+	 }
+	.nameerror {
+		  color: gray;
+	 }
+	
+	 
+
+	#drop {
+		border:2px dashed #bbb;
+		border-radius:5px;
+		padding:5px;
+		text-align:center;
+		font:20pt bold,"Vollkorn";color:#bbb
+		
+	}
+	
+	.link {
+		color:blue;
+		text-decoration:underline;
+		cursor:pointer;
+		 font-size: 16px;
+		 float:right;
+		 padding-right:20px; 
+	}
