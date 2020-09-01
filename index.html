@@ -23,20 +23,18 @@
 	@font-face {
 		font-family: "SUN7_7_810";
 		src: url("SUN7_7_810.woff") format('woff'),
-			 url("SUN7_7_810.woff") format('woff');
+			 url("SUN7_7_810.ttf") format('ttf');
 	}
-	/*
 	@font-face {
-		font-family: "BACKSUN";
-		src: url("fonts/SUNBF77_810_EN.woff") format('woff'),
-			 url("fonts/SUNBF77_810_EN.ttf") format(truetype);
-	}	
-	@font-face {
-		font-family: "SUN";
-		src: url("fonts/SUN7_7_810.woff") format('woff'),
-			 url("fonts/SUN7_7_810.woff") format('woff');
+		font-family: "SUNBF7_8_EN";
+		src: url("SUNBF7_8_EN.woff") format('woff'),
+			 url("SUNBF7_8_EN.ttf") format(truetype);
 	}
-	*/
+	@font-face {
+		font-family: "SUN7_8";
+		src: url("SUN7_8.woff") format('woff'),
+			 url("SUN7_7_8.ttf") format('ttf');
+	}
 	
 	/*
 	@font-face {
@@ -50,7 +48,7 @@
 	*/
 
 	:root {
-		--sun-font: 'BACKSUN';
+		--sun-font: '';
 	}
 	
 
@@ -84,8 +82,8 @@
 						<input id="csfont" type="text" value="Choose Font!" onclick="document.getElementById('fileInput').click(); " >
 						-->
 						<select id = "selFont" onChange="optChangeFont()">
-						   <option value = "SUNBF77_810_EN">BACKSUN 810</option>
-						   <option value = "SUN7_7_810">SUN 810</option>
+						   <option value = "SUNBF7_8_EN">BACKSUN 7_8</option>
+						   <option value = "SUN7_8">SUN 7_8</option>
 						   <option value = "SUNBF77_702_FR">BACKSUN702 French</option>
 						</select>
 						<!--<label style='float:center;' > <strong>&nbspSearch Type&nbsp</strong>
