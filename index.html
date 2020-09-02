@@ -16,25 +16,16 @@
 
 <style>
 	@font-face {
-		font-family: "SUNBF77_810_EN";
-		src: url("SUNBF77_810_EN.woff") format('woff'),
-			 url("SUNBF77_810_EN.ttf") format(truetype);
-	}
-	@font-face {
-		font-family: "SUN7_7_810";
-		src: url("SUN7_7_810.woff") format('woff'),
-			 url("SUN7_7_810.ttf") format('ttf');
-	}
-	@font-face {
 		font-family: "SUNBF7_8_EN";
 		src: url("SUNBF7_8_EN.woff") format('woff'),
-			 url("SUNBF7_8_EN.ttf") format(truetype);
+			  url("SUNBF7_8_EN.ttf") format(truetype);
 	}
 	@font-face {
 		font-family: "SUN7_8";
 		src: url("SUN7_8.woff") format('woff'),
-			 url("SUN7_7_8.ttf") format('ttf');
+			  url("SUN7_8.ttf") format(truetype);
 	}
+
 	
 	/*
 	@font-face {
@@ -48,7 +39,7 @@
 	*/
 
 	:root {
-		--sun-font: '';
+		--sun-font: 'BACKSUN';
 	}
 	
 
@@ -82,8 +73,8 @@
 						<input id="csfont" type="text" value="Choose Font!" onclick="document.getElementById('fileInput').click(); " >
 						-->
 						<select id = "selFont" onChange="optChangeFont()">
-						   <option value = "SUNBF7_8_EN">BACKSUN 7_8</option>
-						   <option value = "SUN7_8">SUN 7_8</option>
+						   <option value = "SUNBF7_8_EN" selected >BACKSUN 7_8</option>
+						   <option value = "SUN7_8">SUN7_8</option>
 						   <option value = "SUNBF77_702_FR">BACKSUN702 French</option>
 						</select>
 						<!--<label style='float:center;' > <strong>&nbspSearch Type&nbsp</strong>
@@ -424,14 +415,14 @@ function setSrch(e) {
 function download() {
 	filename = 'ex.txt'
 	text = document.getElementById("output").textContent;
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	element.setAttribute('download', filename);
 
-  element.style.display = 'none';
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.click();
+	document.body.removeChild(element);
 }
 
 
