@@ -213,12 +213,12 @@ function readDoc(docStr, csvArray) {
 			//console.log(csvArray[i].length, csvArray[i])
 			line = csvArray[i]   //.split(',')
 			word = line[1]
-			unicode = line[2]
+			unicode = line[2].toLowerCase();
 			//console.log(i, word, unicode)
 			//if (i === 0) continue;
-			if (unicode === 'E390') continue;
-			if (unicode === 'E316') continue;
-			if (unicode === 'E37E') continue;
+			if (unicode === 'e390') continue;
+			if (unicode === 'e316') continue;
+			if (unicode === 'e37e') continue;
 			
 			searchword  = '#'+word+'#'
 			
@@ -255,12 +255,13 @@ function readDoc(docStr, csvArray) {
 		
 String.prototype.replaceAll = function (find, replace) {
     var str = this;
+	console.log('replaceall', find, replace);
     return str.replace(new RegExp(find, 'g'), replace);
 };
 
 function markAllWords(wordList, arrayList) {
-console.log('markallwords', wordList, arrayList)	
-	try {
+	console.log('markallwords', wordList, arrayList)	
+	//try {
 		var inner = document.getElementById("output").innerHTML;
 		for (var word in wordList) {
 			console.log(word, wordList[word])
@@ -281,10 +282,10 @@ console.log('markallwords', wordList, arrayList)
 		document.getElementById("output").innerHTML = inner;
 		//console.log(inner)
 		
-	} catch(err) {
-		console.log('error',err.message);
+	//} catch(err) {
+	//	console.log('error',err.message);
 		//console.log('   ',i, csvArray[i], csvArray[i].length,searchword, unicode);
-	}
+	//}
 		
 
 }	
