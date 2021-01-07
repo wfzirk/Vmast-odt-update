@@ -1,7 +1,437 @@
 <!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com 
+		https://github.com/SheetJS/js-xlsx
+		https://stuk.github.io/jszip/
+		https://oss.sheetjs.com/js-xlsx/
+		https://www.pagecloud.com/blog/how-to-add-custom-fonts-to-any-website
+-->
 <html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<title>V-Mast Doc update</title>
+<link href="css/index.css" rel="stylesheet">
+<link href="css/table.css" rel="stylesheet">
+<link href="css/modal.css" rel="stylesheet">
+
+<style>
+	@font-face {
+		font-family: "SUNBF7_8_EN";
+		src: url("SUNBF7_8_EN.woff") format('woff'),
+			  url("SUNBF7_8_EN.ttf") format(truetype);
+	}
+	@font-face {
+		font-family: "SUN7_8";
+		src: url("SUN7_8.woff") format('woff'),
+			  url("SUN7_8.ttf") format(truetype);
+	}
+
+	
+	/*
+	@font-face {
+		font-family: "SUNBF77_702_EN";
+		src: url("https://wfzirk.github.io/Vmast-odt-update/fonts/SUNBF77_702_EN.woff") format('woff');
+	}
+	@font-face {
+		font-family: "SUN7_7_702_EN";
+		src: url("https://wfzirk.github.io/Vmast-odt-update/fonts/SUN7_7_702_EN.woff") format('woff');
+	}
+	*/
+
+	:root {
+		--sun-font: 'BACKSUN';
+	}
+	
+
+
+</style>
+
+</head>
+<body id="main">
+
+	<form >
+		<div id="title">V-Mast Doc Update
+			<span class="link" onclick="javascript:popup();">Help</span>
+		</div>
+
+		<fieldset id="fdrop">
+			<div style="padding-bottom:5px;">
+				<label for="xlf" style="float:left;" > <strong>Select ODS, XLSX or CSV File:</strong></label>
+				<input id="xlf"  type="file" name="xlfile" accept=".csv,.xlsx,.ods">
+				<br>
+				<label for="txlf" style="float:left;"> <strong>Select document as txt File:</strong></label>
+				<input id="txlf"  type="file" name="txlfile" accept=".txt">
+				<div id="drop">Or drop Dictionary and VMast Text file here</div>
+			</div>
+
+			<div class="filetable" style="padding-bottom:1px;">
+				<!--<div class="filetable" style="padding-bottom:5px;">  -->
+					<div style="padding-bottom:5px;">
+	
+						<label for="selFont" style="float:left;"> <strong>Sun font&nbsp</strong></label>
+						<!--<input id="fileInput" type="file" accept=".woff"  style="display:none;" onchange="fileSelected(this)" />
+						<input id="csfont" type="text" value="Choose Font!" onclick="document.getElementById('fileInput').click(); " >
+						-->
+						<select id = "selFont" onChange="optChangeFont()">
+						   <option value = "SUNBF7_8_EN" selected >BACKSUN 7_8</option>
+						   <option value = "SUN7_8">SUN7_8</option>
+						   <option value = "SUNBF77_702_FR">BACKSUN702 French</option>
+						</select>
+						<!--<label style='float:center;' > <strong>&nbspSearch Type&nbsp</strong>
+						<span id="radiospan" style="border:1px; border-style:solid; ">
+							<input type="radio" id="wordsrch" name="wsrch" value="word" onClick="setSrch(true)" checked>
+							<label for="wordsrch">Word</label>
+							<input type="radio" id="charsrch" name="wsrch" value="char" onClick="setSrch(false)">
+							<label for="charsrch">Char&nbsp</label>
+						</span>
+					    </label>-->
+						<label style="float:right;">Edit Mode
+							<input type="checkbox" id="editMode"  onclick="toggleEditMode();">
+						</label>
+						<hr>
+						<div> <b>Note:</b> The <b>VMast document</b> must be saved as a<b>".txt"</b> file.
+							Drag or Load both the VMast document file and the Dictionary spreadsheet
+							into the box above.
+						</div>
+					</div>
+				<!--</div>  -->
+
+			</div>
+		</fieldset>
+		
+	</form>
+		<div id="output" contentEditable="false"> 
+			<span style="color:lightgray";>Document</span>
+		</div>
+		<br>
+<hr>
+<div id="control">
+<center>
+		<button id="download"onClick="download()">Save</button>
+		</center>
+</div>
+<footer>
+	<center>
+		  <p id="copyright">&copy; Wilbur Zirk 2020 <span class="btm">&#xe037; &#xe01a; &#xe127;</span>
+		  </p>
+	</center>
+</footer>
+
+<!-- hidden -->
+<div id="dict"  >	</div>
+
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+
+		  <!-- Modal content -->
+			<div class="modal-content">
+			<div class="modal-header">
+				<span class="close">&times;</span>
+				<p id="mselWord" >Select SUN word to replace </p>
+			</div> 
+			<div class="modal-body">
+				<select id="selectElementId"></select>
+				<hr>
+				<input id="selBtn"  type = "button" value = "Select Word" > <!-- # onclick = "replaceText(this);">  -->
+				<input id="cnclBtn"  type = "button" value = "Cancel" >
+			</div>
+			</div>
+
+		</div>
+	</body>
+<script src="js/jszip.js"></script>
+<script src="js/xlsx.js"></script>
+<!-- <script src="js/cookie.js"></script> -->
+<script src="js/table.js" id="tbl"></script>
+<!-- <script src="js/modal.js"></script>-->
+<script src="js/convertuni.js"></script>
+<script src="js/readdoc.js" > </script>
+<!--<script src="js/popupmenu.js" > </script>-->
+
+<script>
+var debug = false;
+var X = XLSX;
+var CSV = false;
+var TXT = false;
+var global_wb;
+
+var sunfile_loaded = false;
+var table_loaded = false;
+//var srchType = document.querySelector('input[name = wsrch]:checked').value
+var srchType = "char";
+window.addEventListener('DOMContentLoaded', (event) => {
+	console.log('DOM fully loaded')
+	fval = document.getElementById('selFont').value;
+	changeFont(fval);
+
+});
+
+/*
+var csvData = 'Test Data\n'
++ '"","questioned","e061","mouth,said,speak: ?","ask"\n'
++ '"","ashamed","e05f","no,not: mouth: heart",\n'
++ '"","loaf","e05d","mouth,said,speak: grain,wheat","bread"\n'
++ '"","boy","e001","small,few: man",\n'
++ '"me poss","mine",,,"ours:my:our"\n'
++ '"","blaspheme","e05b","mouth,said,speak,confessiom: bad: no,not: good: king,crown,ruler,lord,master: man: love,compassion","insult:blasphemy"\n'
++ '"","Apelles","ebcd","man:split,divide,division,separate","looks_like"\n'
++ '"","Levi","eb1b","man: with: equal,same: people",\n'
++ '"","chariot","EC82","horse: chair,sit",\n'
++ '"","Cilicia","EB5B","hair: face: fabric,clothing: land,ground,earth",\n'
++ '"","Nahor","EC6E","man: air",\n';
+*/
+
+
+
+function fixUnicode(lines) {
+	console.log('fix');
+	var t0 = performance.now();
+
+	for (var i = 0; i < lines.length; i ++) {
+		rowx = lines[i]
+			j = 0
+			var uni = rowx[j];
+			if (uni.length === 3) {
+				var hArry = toHexArray(uni);
+				
+				uni = convertUTF82CP(hArry).toLowerCase();
+				var char = unescape('%u' + uni);
+				lines[i][j] = char;
+			}
+	}
+	//console.log('csvfix',lines);
+	var t1 = performance.now();
+	console.log("fixUnicode " + (t1 - t0) + " milliseconds.");
+	return lines;
+}
+/*
+function hex2Unicode(hexAry) {
+	console.log(hexAry, hexAry.length)
+
+}
+*/
+
+var process_wb = (function() {
+	//var OUT = document.getElementById('output');
+	var to_csv = function to_csv(workbook) {
+		var t0 = performance.now();
+		var result = [];
+		workbook.SheetNames.forEach(function(sheetName) {
+			var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+			//var csv = X.utils.sheet_to_json(workbook.Sheets[sheetName], {header:1, raw:true});
+			if(csv.length){
+				result.push("SHEET: " + sheetName);
+				result.push("");
+				result.push(csv);
+			}
+		});
+		var t1 = performance.now();
+		console.log("to_csv " + (t1 - t0) + " milliseconds.");
+		return result.join("\n");
+	};
+
+
+	return function process_wb(wb) {
+		var t0 = performance.now();
+		console.log('process_wb')
+		global_wb = wb;
+		//var output = "";
+        csv = to_csv(wb);
+		csvArray = csvToArray(csv);
+
+		if (CSV) csvArray = fixUnicode(csvArray);
+		
+		table = generateTable(csvArray);
+		if (table) table_loaded = true;
+		
+		var t1 = performance.now();
+		console.log("process_wb "+ (t1 - t0) + " milliseconds.");
+	};
+
+})();
+
+var do_file = (function() {
+	return function do_file(files) {
+		console.log('do_file');
+		var t0 = performance.now();
+		var rABS = false;
+		var f = files[0];
+		var fname = f["name"];
+		var ext = fname.slice((fname.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
+		console.log('extension',ext)
+		if (ext === 'txt') TXT = true;
+		else TXT = false;
+		
+		if (ext === 'csv') CSV = true;
+		else CSV = false;
+		
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			var data = e.target.result;
+			if (TXT) {
+				SUNbuffer = buf2hex(data)
+				document.getElementById("output").innerHTML = UTF8ToText(SUNbuffer)
+				sunfile_loaded = true;
+			} else {
+				process_wb(X.read(data, {type:'array'}));
+			}
+			console.log('data processed')
+			processData()
+		};
+		
+		if(rABS) reader.readAsBinaryString(f);
+		else {
+			console.log('read as arraybuffer')
+			reader.readAsArrayBuffer(f);
+		}
+		
+		
+		var t1 = performance.now();
+		console.log("do_file " + (t1 - t0) + " milliseconds.");
+	};
+})();
+
+
+function processData() {
+	//console.log('processData', SUNbuffer.length, csvArray.length)
+	if (sunfile_loaded && table_loaded) {
+		console.log('both files loaded')
+		readDoc(document.getElementById("output").textContent, csvArray)
+	}
+}
+
+function toggleEditMode() {
+	e =document.getElementById("editMode").checked;
+	var contenteditable = document.getElementById("output").contentEditable;
+ 	// if(contenteditable == 'inherit' || contenteditable == 'false'){
+	if (e) {
+	  document.getElementById("output").contentEditable = true;
+	 }else{
+	  document.getElementById("output").contentEditable = false;
+	 }
+}
+
+
+
+
+(function() {
+	var drop = document.getElementById('fdrop');
+	//var drop = document.getElementById('main');
+	if(!drop.addEventListener) return;
+
+	function handleDrop(e) {
+		console.log('file dropped')
+		e.stopPropagation();
+		e.preventDefault();
+		do_file(e.dataTransfer.files);
+
+	}
+
+	function handleDragover(e) {
+		console.log('handeldragover')
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	}
+
+	drop.addEventListener('dragenter', handleDragover, false);
+	drop.addEventListener('dragover', handleDragover, false);
+	drop.addEventListener('drop', handleDrop, false);
+
+	var xlf = document.getElementById('xlf');
+	if(!xlf.addEventListener) return;
+	var txlf = document.getElementById('txlf');
+	if(!txlf.addEventListener) return;
+	
+	function handleFile(e) { 
+		console.log('file chooser',e)
+		do_file(e.target.files);
+	}
+	
+	xlf.addEventListener('change', handleFile, false);
+	txlf.addEventListener('change', handleFile, false);						
+
+
+	function mouseUp(e) {
+		console.log('mouseup',e)
+		getSelectedText('******'); 
+	}
+
+	mouseSel = document.getElementById("output");
+	//mouseSel.addEventListener('mouseup', mouseUp, false)
+	//mouseSel.addEventListener("select", mouseUp, false);
+	mouseSel.addEventListener('click', mouseUp, false)
+			
+})();
+
+
+function optChangeFont() {
+	fval = document.getElementById('selFont').value;
+	getFont(fval);
+}
+
+function getFont(fval) {
+	console.log('getFont',fval)
+	changeFont(fval)
+}
+
+
+//https://stackoverflow.com/questions/11355147/font-face-changing-via-javascript
+function fface(f) {
+	ff = "@font-face { font-family: '" + f + "';\
+		src: url('" + f + ".woff') format('woff'),\
+		     url('" + f + ".ttf') format('truetype');\
+	}"
+
+	console.log(ff)
+	return ff;
+}
+
+function changeFont(f) {
+	console.log(f)
+	ff = fface(f)
+	var fStyle = document.getElementById("fontStyle")
+	if (!fStyle) {
+		fStyle = document.createElement('style');
+		fStyle.id = "fontStyle"
+		fStyle.appendChild(document.createTextNode(ff)
+		);
+			
+		document.head.appendChild(fStyle);
+	} else {
+		fStyle.innerHTML = ff;
+	}
+
+	console.log(fStyle.innerHTML)
+	document.documentElement.style.setProperty('--sun-font', f);
+
+}
+
+function setSrch(e) {
+	srchType = document.querySelector('input[name = wsrch]:checked').value
+	//search_Table()
+}
+
+function download() {
+	filename = 'ex.txt'
+	text = document.getElementById("output").textContent;
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	element.setAttribute('download', filename);
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.click();
+	document.body.removeChild(element);
+}
+
+
+function popup() {
+	console.log('popup');
+	let newWindow = open('help.html', 'example', 'width=500,height=450')
+	newWindow.focus();
+
+}
+</script>
 </body>
 </html>

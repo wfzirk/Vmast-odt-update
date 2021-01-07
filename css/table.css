@@ -1,0 +1,82 @@
+table.xreftable {
+		 border-width: 1px;
+		 border-spacing: 0;
+		 border-style: outset;
+		 border-color: black;
+		 border-collapse: separate; 
+		 background-color: white; 
+		 font-size: 14px;
+		 table-layout: fixed;
+		 margin-bottom: 5px;
+		 width: 100%; 
+		 empty-cells: show;
+
+	}
+	.xreftable tr {
+		vertical-align: middle;
+		padding-top: 5px;
+	}
+
+	.xreftable td, .xreftable th {
+		border-width: 1px;
+		padding: 1px;
+		border-style: inset;
+		border-color: lightblue;
+		font-size: 14px;
+		word-wrap: break-word;
+		min-width: 25px;
+	}
+	
+	.xreftable td.nameCol, .xreftable th.nameCol {
+		 word-wrap: break-word;
+		 width: 100px;
+	}
+	
+	.xreftable td.synCol, .xreftable th.synCol {
+		line-height: 15px;
+		width: 120px;
+	}
+	.xreftable td.xrefCol, .xreftable th.xrefCol {
+		line-height: 15px;
+	}
+
+	.xreftable td.fonticon {
+		font-size: 32px;
+		font-family: var(--sun-font); 
+		vertical-align: middle;
+		color: blue;
+		width: 45px;
+		height: 100%;
+	}
+	.xreftable th.fonticon {
+		text-align: center;
+		color: blue;
+		width: 45px;
+	}
+	
+	.xreftable td.unicol {
+		text-align: center;
+		font-size: 14px;
+		font-family: var(--sun-font); 
+		color: blue;
+		width: 60px;
+	}
+	.xreftable th.unicol {
+		text-align: center;
+		color: blue;
+		width: 60px;
+	}
+
+
+	 .xreftable tbody, .xreftable tr:nth-child(even){
+		 background-color: #efefef;
+	 }
+
+
+	 .xreftable tbody, .xreftable tr:nth-child(odd){
+		 background-color: #dfdfdf;
+	 }
+
+	 .xreftable table, .xreftable tbody, .xreftable tr:hover{
+		 background-color: #ffffd8;
+	 }
